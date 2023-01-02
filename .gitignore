@@ -1,3 +1,9 @@
 # Executables
 *.exe
 *.out
+
+#LA BDD
+test.db
+
+#IDE FOLDERS
+.vscode
