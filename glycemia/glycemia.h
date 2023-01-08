@@ -7,5 +7,5 @@ struct Entry {
     int entries; //number of entries of the journal
 };
 
-Entry *createEntry(double value, char *comment, int position);
-void addEntry(Entry *firstEntry, double i, char *comment);
+Entry *createEntry(double value, char *comment, char *date, int position);
+void addEntry(Entry *firstEntry, double i, char *comment, char *date, int position);

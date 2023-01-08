@@ -26,7 +26,4 @@ This app is a journaling app for diabetic people who wants to keep trace of thei
  * 
  * * * * * * 
 
-Go to docs/ for more info about the app 
-
-
     
