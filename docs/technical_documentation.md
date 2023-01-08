@@ -20,7 +20,26 @@ Toute notre progression a été enregistrée via git et partagée via github, no
     https://github.com/Mil0w0/diabetiC.git
 
 II. Fonctionnalités avancées
-...	
+
+    a. Enregistrer sa glycémie
+
+    Lorsque l'utilisateur est connecté, il peut enregistrer sa glycémie. 
+    Pour cela, on va lui demander, la valeur de sa glycémie et un commentaire à ajouter (optionnel).
+    Le tout va être stocké dans une structure Entry.
+    
+    struct Entry {
+    Entry *next;
+    double value; //the glycemia
+    char * comment; // an optional comment about the glycemia
+    char * taken_at ; //date when the glycemia was taken (can't be null)
+    int entries; //number of entries of the journal
+    }
+    
+    Entry est un noeud d'une liste chainée comprenant chaque glycémie rentrée par l'utilisateur à une date taken_at.
+    Le nombre entries est incrémenté à chaque nouvelle entrées (Entry).
+    La date taken_at n'est pas renseigné et est NULL par défaut car elle sera set grâce au NOW() du SQL.
+
+
 III. Utilisation de la base de données
 
 L'application utilise SQLite, une base de donnée, comme système de persistence des données.
@@ -36,7 +55,7 @@ SQLite est développé en C, language également utilisé pour notre application
 
 ## Mode d’utilisation :
 I.          Back-office et administrateur	2
-II.          Utilisateurs	3
+II.         Utilisateurs	3
 
 ## Synthèse des membres de l’équipe
 ● Loriane :
