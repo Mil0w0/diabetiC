@@ -9,7 +9,7 @@ https://www.tutorialspoint.com/sqlite/sqlite_installation.htm
 
  * Unzip those files in C:\sqlite
  * Add this path in the $PATH environnment variable (Paramètres>Système>A propos> Paramètres avancés> Environnement de variables> PATH> Nouveau>OK)
- * open a shell and run "slqite3" (-> should display version of sqlite)
+ * open a shell and run "sqlite3" (-> should display version of sqlite)
 
 # Useful commands in sqlite: 
 sqlite >.databases  --display databases
