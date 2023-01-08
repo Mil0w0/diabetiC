@@ -7,8 +7,8 @@
 #include "glycemia.h"
 
 
-//Create a node
-Entry *createEntry(double value, char *comment, int position){
+//Create a node 
+Entry *createEntry(double value, char *comment, char *date, int position){
     Entry *glycemia = malloc(sizeof(Entry)); 
     glycemia->next = NULL;
     glycemia->value = value;
@@ -24,11 +24,18 @@ Entry *createEntry(double value, char *comment, int position){
 }
 
 //Add an entry to the diary : a chained list of nodes
-void addEntry(Entry *firstEntry, double i, char *comment){
-    while(firstEntry->next){ //looking for the current last entry
-        firstEntry = firstEntry->next;
+void addEntry(Entry *lastEntry, double i, char *comment, char *date, int position){
+    
+    //if user add a new entry, position is calculated from the last entry
+    //if we are recreating the list from the db data then position has already been calculated.
+    if (position == 0){
+         while(lastEntry->next){ //looking for the current last entry
+            lastEntry = lastEntry->next;
+        }
+        position = (lastEntry->entries + 1) ; 
     }
-    firstEntry->next = createEntry(i, comment, (firstEntry->entries + 1));
+
+    lastEntry->next = createEntry(i, comment, date, position);
 }
 
 // modify the content of a node     
@@ -40,8 +47,8 @@ void addEntry(Entry *firstEntry, double i, char *comment){
 
 int main(int argc, char **argv){
 
-    Entry *n = createEntry(5.2, "comment", 1);
-    addEntry(n, 7.0, "yes");
+    Entry *n = createEntry(5.2, "comment", NULL, 1);
+    addEntry(n, 7.0, "yes", NULL, 0); 
 
     printf("%.2lf\n", n->value);
     printf("%d\n", n->entries);

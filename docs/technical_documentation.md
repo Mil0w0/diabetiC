@@ -22,7 +22,7 @@ Toute notre progression a été enregistrée via git et partagée via github, no
 II. Fonctionnalités avancées
 
     a. Enregistrer sa glycémie
-
+        i. Coté structure en C
     Lorsque l'utilisateur est connecté, il peut enregistrer sa glycémie. 
     Pour cela, on va lui demander, la valeur de sa glycémie et un commentaire à ajouter (optionnel).
     Le tout va être stocké dans une structure Entry.
@@ -34,10 +34,25 @@ II. Fonctionnalités avancées
     char * taken_at ; //date when the glycemia was taken (can't be null)
     int entries; //number of entries of the journal
     }
-    
+
     Entry est un noeud d'une liste chainée comprenant chaque glycémie rentrée par l'utilisateur à une date taken_at.
     Le nombre entries est incrémenté à chaque nouvelle entrées (Entry).
     La date taken_at n'est pas renseigné et est NULL par défaut car elle sera set grâce au NOW() du SQL.
+
+    Value est un double qui peut prendre plusieurs formes selon l'unité utilisé pour exprimer la glycémie (nmol/L, mg/dL, g/L). 
+    
+    On vérifie donc que : 
+    * value > 0
+    * entries > 0
+    * taille de comment < 256 caractères.
+
+        ii. Coté Base de données. 
+    Une fois que la structure a été créé, on est donc sûr qu'il n'y pas d'erreur dans les données, on peut donc envoyer chaque valeur dans la BDD.
+
+    Une table ENTRY avec en colonne les mêmes attributs (sauf next) que la struct Entry est créé et on INSERT les valeurs récupérer dans la struct.
+    A noter que taken_at est bien rempli grâce à NOW();   
+
+    b. Récupérer les données des glycémies venant de la BDD lors de la connexion de l'utilisateur (hors première connexion)  
 
 
 III. Utilisation de la base de données
