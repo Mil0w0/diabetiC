@@ -52,7 +52,17 @@ II. Fonctionnalités avancées
     Une table ENTRY avec en colonne les mêmes attributs (sauf next) que la struct Entry est créé et on INSERT les valeurs récupérer dans la struct.
     A noter que taken_at est bien rempli grâce à NOW();   
 
-    b. Récupérer les données des glycémies venant de la BDD lors de la connexion de l'utilisateur (hors première connexion)  
+    b. Récupérer les données des glycémies venant de la BDD lors de la connexion de l'utilisateur (hors première connexion)
+
+    Lorsque l'utilisateur ferme l'appli, ses données sont donc sauvegardées grâce à une base de donnée SQLITE. Lorsqu'il revient et se connecte, pour afficher ses dernières glycémies ou ajouter une nouvelle entry, on recréé la liste chainée en utilisant les fonctions addEntry() et createEntry(). Elles ont été créés de sorte qu'on puisse les utiliser pour créer des noeuds depuis des inputs utilisateur ou qu'on récupère des données de la bdd puis qu'on crée des noeuds avec ces données.
+
+    c. Alerte si glycémie hors de la cible.
+    Si la glycémie que l'utilisateur entre dans son journal est en dehors de la cible alors un message d'alerte le lui indique et le conseil sur la démarche à suivre.
+    Il est possible de désactiver cette option dans les settings ou le config.txt.
+
+    d. Unités de la glycémie.
+
+    e. Affichage des glycémies
 
 
 III. Utilisation de la base de données
