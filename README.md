@@ -26,14 +26,7 @@ This app is a journaling app for diabetic people who wants to keep trace of thei
  * 
  * * * * * * 
 
-# Our stack : 
-
-* SQLite : 
-    [here comes the explanation of why we use it]
-* The library that goes with SQLite 
-    [here is how to install it]
-
-
+Go to docs/ for more info about the app 
 
 
     
