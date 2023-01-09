@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <string.h>
 #include "sqlite3.h"
 #include <time.h>
 
@@ -44,7 +45,7 @@ int main(int argc, char **argv) {
     int connected = 0;
     char username[30];
     char password[30];
-    int age;
+    char age[2];
     bool isUserValid = false;
     //CREATE  TEST DATABASE;
     rc = sqlite3_open("test.db", &db);
@@ -83,18 +84,6 @@ int main(int argc, char **argv) {
         sqlite3_free(zErrMsg);
     }
 
-    //INSERT INTO THE USERS TABLE SOME USERS;
-    sql = "INSERT INTO USERS (ID, USERNAME, AGE, PASSWORD, CREATED_AT)" \
-          "VALUES (1, 'John', 25, '1234', CURRENT_TIMESTAMP);" \
-          "INSERT INTO USERS (ID, USERNAME, AGE, PASSWORD, CREATED_AT)" \
-          "VALUES (2, 'Paul', 30, '1234', CURRENT_TIMESTAMP);" \
-          "INSERT INTO USERS (ID, USERNAME, AGE, PASSWORD, CREATED_AT)" \
-          "VALUES (3, 'Ringo', 35, '1234', CURRENT_TIMESTAMP);" \
-          "INSERT INTO USERS (ID, USERNAME, AGE, PASSWORD, CREATED_AT)" \
-          "VALUES (4, 'George', 40, '1234', CURRENT_TIMESTAMP);" \
-          "INSERT INTO USERS (ID, USERNAME, AGE, PASSWORD, CREATED_AT)" \
-          "VALUES (5, 'Pete', 45, '1234', CURRENT_TIMESTAMP);";
-
     do {
         // Case 1: User is not connected
         if(connected == 0) {
@@ -122,19 +111,28 @@ int main(int argc, char **argv) {
                 printf("Please enter your password:\n");
                 scanf("%s", &password);
                 printf("Please enter your age:\n");
-                scanf("%d", &age);
+                scanf("%s", &age);
                 //INSERT USER IN DATABASE;
-                sql = "INSERT INTO USERS (USERNAME, AGE, PASSWORD, CREATED_AT)" \
-                      "VALUES ("username", "age", "password", CURRENT_TIMESTAMP);";
+                char sqltest[] = "INSERT INTO USERS (USERNAME, AGE, PASSWORD, CREATED_AT) VALUES ('";
+                printf("\n");
+                strcat(sqltest, username);
+                strcat(sqltest, "', '");
+                strcat(sqltest, age);
+                strcat(sqltest, "', '");
+                strcat(sqltest, password);
+                strcat(sqltest, "', ");
+                strcat(sqltest, "CURRENT_TIMESTAMP);");
 
-                rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg);
+                printf("%s", sqltest);
 
-                if( rc != SQLITE_OK ) {
-                    fprintf(stderr, "SQL error: %s\n", zErrMsg);
-                    sqlite3_free(zErrMsg);
-                } else {
-                    fprintf(stdout, "User created successfully\n");
-                }
+                // rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg);
+
+                // if( rc != SQLITE_OK ) {
+                //     fprintf(stderr, "SQL error: %s\n", zErrMsg);
+                //     sqlite3_free(zErrMsg);
+                // } else {
+                //     fprintf(stdout, "User created successfully\n");
+                // }
 
             }else if(choice == 3) {
                 printf("Goodbye!\n");
