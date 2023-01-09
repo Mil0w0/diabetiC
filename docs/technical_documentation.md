@@ -42,7 +42,7 @@ II. Fonctionnalités avancées
     Value est un double qui peut prendre plusieurs formes selon l'unité utilisé pour exprimer la glycémie (nmol/L, mg/dL, g/L). 
     
     On vérifie donc que : 
-    * value > 0
+    * value > 0 (et si virgule il existe, la remplacer par un . <=pas encore développé)
     * entries > 0
     * taille de comment < 256 caractères.
 
