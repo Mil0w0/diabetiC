@@ -64,6 +64,35 @@ II. Fonctionnalités avancées
 
     e. Affichage des glycémies
 
+    f. Enregister un user
+
+        i. Côté structure en C
+    Pour commencer deux choix se posent pour l'utilisateur de l'application, se connecter ou créent un nouvel utilisateur :
+
+	- Connexion avec un utilisateur, le programme va demander dans un scanf de rentrer le nom d'utilisateur et le mot de passe allant avec le compte et l'enverra avec une requête SQL
+
+	- Création du nouvel utilisateur, pareil que pour la connexion, le programme va demander à l'utilisateur d'entrer des valeurs (username, password et age) suite à cela le programme va envoyer plusieurs requêtes à la base de données
+	  Premièrement nous allons vérifier que le nom d'utilisateur n'est pas déjà pris par quelqu'un, dans ce cas-là le programme demandera de changer la valeur d'entrée de username.
+	  Ensuite une requête est envoyée pour pouvoir enregister l'utilisateur dans la base USERS (crée précédemment dans le programme et qui reste la même a chaque ouverture du programme grâce à un CREATE IF NOT EXIST)
+
+    Ces deux choix mènent à la même sortie, le fait d'être connecté à l'application, cela permet de pouvoir afficher un différent menu et de se balader dans l'application.
+    TO DO : parser le mot de passe pour le stocker de manière protéger dans la base de données
+
+	ii. Côté Base de données
+    Comme vu précédemment une table USERS est créé à la première instance de l'application, ce qui va permettre d'enregister des utilisateurs, qui sont eux-mêmes définis par :
+
+	- Un ID, clé primaire de la table, étant donné que les noms d'utilisateurs sont uniques nous aurions pu aussi les mettre en clé primaire mais cela permet une meilleure visibilité dans la table
+
+	- Un Username, qui permet d'identifier l'utilisateur par un nom, et de lui-même pouvoir se reconnecter au redémarrage de l'application
+
+	- Un Password, permettant à l'utilisateur concerné d'être le seul à pouvoir se connecter à son compte
+
+	- Un Age, pour l'instant facultatif mais pouvant permettre de proposer un language plus adapté à l'âge de l'utilisateur (enfant)
+
+	- Une Date de Création, le moment exact de la création de l'utilisateur pouvant permettre l'analyse des glycémies avec le temps
+
+    Les actions que l'on fait sur cette table sont assez basiques allants de l'INSERT INTO () VALUES () au SELECT WHERE assez basique mais nécessaire pour le fonctionnement du menu de base
+
 
 III. Utilisation de la base de données
 
