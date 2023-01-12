@@ -13,20 +13,35 @@ char askForGlycemia[] = "Enter current glycemia : ";
 double inputsGlycemia(){
     double glycemia;
     double irrealMax = 100; //but can be different if unit is different.
+
     do {
         printf(defaultUnit);
         printf(askForGlycemia);
         scanf("%lf", &glycemia);
         printf("\n");
     } while (glycemia < 0 || glycemia > irrealMax);
-    //need to write double with a dot not comma. how do we check that ?
+    //need to write double with a dot not comma. how do we check that ? strchr() if it s a string;
 
     return glycemia;
 }
+char * inputComment(){}
+
+
+
+
+char getGlycemiaDataFromDB(unsigned int user_id, unsigned int glycemia_position){
+    //SQL QUERY
+    //"SELECT GLYCEMIA.id, value, taken_at, comment FROM GLYCEMIA, USER WHERE USER.id ="
+    //user_id
+    //"AND GLYCEMIA.id = "
+    //glycemia_position
+}
+
+
 
 
 //test code
-int main(int argc, char **argv){
-    double glycemia = inputsGlycemia();
-    printf("%.2lf", glycemia);
-}
+// int main(int argc, char **argv){
+//     double glycemia = inputsGlycemia();
+//     printf("%.2lf", glycemia);
+// }
