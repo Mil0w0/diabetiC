@@ -1,10 +1,12 @@
 // This file handles the creation of the chained list of entries;
+//gcc -o entries/entry.c glycemia/glycemia.c    
 
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 //#include "sqlite3.h"
 #include "entry.h"
+#include "../glycemia/glycemia.h"
 
 
 //Create a node 
@@ -34,16 +36,20 @@ void addEntry(Entry *lastEntry, double i, char *comment, char *date, int positio
         }
         position = (lastEntry->entries + 1) ; 
     }
-
     lastEntry->next = createEntry(i, comment, date, position);
 }
 
 // modify the content of a node     
 
+//does data exist about this user ? 
+
 int main(int argc, char **argv){
 
-    Entry *n = createEntry(5.2, "comment", NULL, 1);
-    addEntry(n, 7.0, "yes", NULL, 0); 
+    //If user enters new information use inputs Function 
+    //Else if user is login in and we wanna access the past data use data from database.
+
+    Entry *n = createEntry(inputsGlycemia(), "comment", NULL, 1);
+    addEntry(n, inputsGlycemia(), "yes", NULL, 0); 
 
     printf("%.2lf\n", n->value);
     printf("%d\n", n->entries);
