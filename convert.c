@@ -5,11 +5,11 @@
 #include <stdio.h>
 #include "sqlite3.h"
 
-float gTomm(int valg) {
+float gTomm(float valg) {
     return valg*0.18;
 }
 
-float mmTog(int valmm) {
+float mmTog(float valmm) {
     return valmm*5.5;
 }
 
