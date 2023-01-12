@@ -60,7 +60,7 @@ int main(int argc, char **argv) {
     //CREATE A USER TABLE IF NOT EXISTS;
     /* Create SQL statement */
     sql = "CREATE TABLE IF NOT EXISTS USERS("  \
-        "ID               INT PRIMARY KEY     NOT NULL," \
+        "ID               INTEGER PRIMARY KEY AUTOINCREMENT     NOT NULL," \
         "USERNAME         VARCHAR(30)    NOT NULL," \
         "AGE              INT     NOT NULL," \
         "PASSWORD         VARCHAR(30)," \
@@ -106,33 +106,50 @@ int main(int argc, char **argv) {
                     printf("Wrong username or password, please try again!\n");
                 }
             }else if(choice == 2) {
+                // sql = "SELECT COUNT * from USERS"
+
+                char sqltest[200] = "INSERT INTO USERS (USERNAME, PASSWORD, AGE, CREATED_AT) VALUES ('\0";
                 printf("Please enter your username:\n");
                 scanf("%s", &username);
-                printf("Please enter your password:\n");
-                scanf("%s", &password);
-                printf("Please enter your age:\n");
-                scanf("%s", &age);
-                //INSERT USER IN DATABASE;
-                char sqltest[] = "INSERT INTO USERS (USERNAME, AGE, PASSWORD, CREATED_AT) VALUES ('";
                 printf("\n");
+                strcat(username, "\0");
+
+                printf("Please enter your password:\n");
+                fflush(stdin);
+                char* input = malloc(30);
+                char* getPassword = malloc(30);
+                getPassword = fgets(input, 30, stdin);
+                for(int i = 0; i < strlen(getPassword); i++) {
+                    if(getPassword[i] == '\n') {
+                        getPassword[i] = getPassword [i + 1];
+                    }
+                }
+
+                printf("\nPlease enter your age:\n");
+                scanf("%s", &age);
+                printf("\n");
+                strcat(age, "\0");
+
                 strcat(sqltest, username);
                 strcat(sqltest, "', '");
-                strcat(sqltest, age);
+                strcat(sqltest, getPassword);
                 strcat(sqltest, "', '");
-                strcat(sqltest, password);
+                strcat(sqltest, age);
                 strcat(sqltest, "', ");
                 strcat(sqltest, "CURRENT_TIMESTAMP);");
 
-                printf("%s", sqltest);
+                free(input);
+                free(getPassword);
 
-                // rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg);
+                rc = sqlite3_exec(db, sqltest, callback, 0, &zErrMsg);
 
-                // if( rc != SQLITE_OK ) {
-                //     fprintf(stderr, "SQL error: %s\n", zErrMsg);
-                //     sqlite3_free(zErrMsg);
-                // } else {
-                //     fprintf(stdout, "User created successfully\n");
-                // }
+                if( rc != SQLITE_OK ) {
+                    fprintf(stderr, "SQL error: %s\n", zErrMsg);
+                    sqlite3_free(zErrMsg);
+                } else {
+                    fprintf(stdout, "User created successfully\n");
+                    connected = 1;
+                }
 
             }else if(choice == 3) {
                 printf("Goodbye!\n");
