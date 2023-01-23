@@ -1,5 +1,4 @@
 // This file handles the manipulation about the glycemias.
-
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -8,6 +7,38 @@
 //text variables to be put in an env file later
 char defaultUnit[] = "Default glycemia unit is g/L.\n";
 char askForGlycemia[] = "Enter current glycemia : ";
+
+
+//Create Glycemia table in DB.
+
+rc = sqlite3_open("test.db", &db);
+
+if( rc ) {
+fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
+return(0);
+} else {
+fprintf(stderr, "Opened database successfully\n");
+}
+
+//CREATE A USER TABLE;
+/* Create SQL statement */
+sql = "CREATE TABLE GLYCEMIA("  \
+      "ID            INT PRIMARY KEY  NOT NULL," \
+      "VALUE         VARCHAR(30)      NOT NULL," \
+      "TAKEN_AT      DATETIME         NOT NULL," \
+      "COMMENT       VARCHAR(255)," \
+      "USER_ID );";
+
+/* Execute SQL statement */
+rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg);
+
+if( rc != SQLITE_OK ){
+fprintf(stderr, "SQL error: %s\n", zErrMsg);
+sqlite3_free(zErrMsg);
+} else {
+fprintf(stdout, "Table created successfully\n");
+}
+sqlite3_close(db);
 
 //get glycemia from user
 double inputsGlycemia(){

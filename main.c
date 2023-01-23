@@ -1,3 +1,4 @@
+//Compilation on linux : gcc main.c sqlite3.c -o main.exe -lpthread -ldl -lm
 //To compile : gcc main.c sqlite3.c -o main.exe
 // THIS FILE IS ONLY A TEST AND IT SEEMS TO BE WORKING 
 
@@ -22,7 +23,7 @@ int main(int argc, char **argv){
    char *sql;
 
 
-    //CREATE  TEST DATABASE;
+   //CREATE  TEST DATABASE;
    rc = sqlite3_open("test.db", &db);
 
    if( rc ) {
