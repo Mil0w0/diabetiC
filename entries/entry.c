@@ -1,5 +1,5 @@
 // This file handles the creation of the chained list of entries;
-//gcc -o entries/entry.c glycemia/glycemia.c    
+//gcc -o entries/entry.exe entries/entry.c glycemia/glycemia.c -lpthread -ldl -lm
 
 #include <stdlib.h>
 #include <stdio.h>
