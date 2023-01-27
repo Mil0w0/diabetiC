@@ -160,7 +160,6 @@ int main(int argc, char **argv)
             }else if(choice == 2)
             {
 
-                char sqltest[200] = "INSERT INTO USERS (USERNAME, PASSWORD, AGE, CREATED_AT) VALUES ('\0";
                 printf("\nPlease enter your username:\n");
                 scanf("%s", &username);
                 printf("\n");
@@ -183,6 +182,7 @@ int main(int argc, char **argv)
                 printf("\n");
                 strcat(age, "\0");
 
+                char sqltest[200] = "INSERT INTO USERS (USERNAME, PASSWORD, AGE, CREATED_AT) VALUES ('\0";
                 strcat(sqltest, username);
                 strcat(sqltest, "', '");
                 strcat(sqltest, getPassword);
