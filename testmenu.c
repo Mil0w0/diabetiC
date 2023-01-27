@@ -1,3 +1,4 @@
+//Compilation on linux : gcc testmenu.c sqlite3.c -o testmenu.exe -lpthread -ldl -lm
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
