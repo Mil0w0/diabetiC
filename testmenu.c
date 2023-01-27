@@ -60,7 +60,9 @@ int main(int argc, char **argv)
     char username[30];
     char password[30];
     char age[3];
+    char targeted_glycemia[10];
     bool isUserValid = false;
+
     //CREATE  TEST DATABASE;
     rc = sqlite3_open("test.db", &db);
 
@@ -76,11 +78,12 @@ int main(int argc, char **argv)
     //CREATE A USER TABLE IF NOT EXISTS;
     /* Create SQL statement */
     sql = "CREATE TABLE IF NOT EXISTS USERS("  \
-        "ID               INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL," \
-        "USERNAME         VARCHAR(30)    NOT NULL," \
-        "AGE              INT     NOT NULL," \
-        "PASSWORD         VARCHAR(30)," \
-        "CREATED_AT       DATETIME);";        
+        "ID                INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL," \
+        "USERNAME          VARCHAR(30)    NOT NULL," \
+        "AGE               INTEGER     NOT NULL," \
+        "PASSWORD          VARCHAR(30)," \
+        "TARGETED_GLYCEMIA FLOAT     NOT NULL," \
+        "CREATED_AT        DATETIME);";        
     
     /* Execute SQL statement */
     rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg);
@@ -92,15 +95,15 @@ int main(int argc, char **argv)
     }
 
     // // Print the table users for debug only
-    // sql = "SELECT * FROM USERS";
+    sql = "SELECT * FROM USERS";
 
-    // rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg);
+    rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg);
 
-    // if( rc != SQLITE_OK )
-    // {
-    //     fprintf(stderr, "SQL error: %s\n", zErrMsg);
-    //     sqlite3_free(zErrMsg);
-    // }
+    if( rc != SQLITE_OK )
+    {
+        fprintf(stderr, "SQL error: %s\n", zErrMsg);
+        sqlite3_free(zErrMsg);
+    }
 
     do 
     {
@@ -165,17 +168,6 @@ int main(int argc, char **argv)
                 printf("\n");
                 strcat(username, "\0");
 
-                // fflush(stdin);
-                // char* input = malloc(30);
-                // char* getPassword = malloc(30);
-                // getPassword = fgets(input, 30, stdin);
-                // for(int i = 0; i < strlen(getPassword); i++)
-                // {
-                //     if(getPassword[i] == '\n') {
-                //         getPassword[i] = getPassword [i + 1];
-                //     }
-                // }
-
                 printf("Please enter your age:\n");
                 scanf("%s", &age);
                 printf("\n");
@@ -186,19 +178,21 @@ int main(int argc, char **argv)
                 printf("\n");
                 strcat(password, "\0");
 
-                char sqltest[200] = "INSERT INTO USERS (USERNAME, PASSWORD, AGE, CREATED_AT) VALUES ('\0";
+                printf("Please enter your targeted glycemia:\n");
+                scanf("%s", &targeted_glycemia);
+                printf("\n");
+                strcat(targeted_glycemia, "\0");
+
+                char sqltest[200] = "INSERT INTO USERS (USERNAME, PASSWORD, AGE, TARGETED_GLYCEMIA, CREATED_AT) VALUES ('\0";
                 strcat(sqltest, username);
                 strcat(sqltest, "', '");
                 strcat(sqltest, password);
                 strcat(sqltest, "', '");
                 strcat(sqltest, age);
+                strcat(sqltest, "', '");
+                strcat(sqltest, targeted_glycemia);
                 strcat(sqltest, "', ");
                 strcat(sqltest, "CURRENT_TIMESTAMP);");
-
-                printf("%s\n", sqltest);
-
-                // free(input);
-                // free(getPassword);
 
                 rc = sqlite3_exec(db, sqltest, callback, 0, &zErrMsg);
 
