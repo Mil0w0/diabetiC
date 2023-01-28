@@ -17,7 +17,7 @@ static int callback(void *NotUsed, int argc, char **argv, char **azColName) {
     printf("\n");
     return 0;
 }
-
+/*
 int main(int argc, char **argv) {
 
     sqlite3 *db;
@@ -37,7 +37,7 @@ int main(int argc, char **argv) {
 
     //CREATE A USER TABLE IF NOT EXISTS;
     /* Create SQL statement */
-    sql = "CREATE TABLE IF NOT EXISTS USERS("  \
+   /* sql = "CREATE TABLE IF NOT EXISTS USERS("  \
         "ID               INTEGER PRIMARY KEY AUTOINCREMENT     NOT NULL," \
         "USERNAME         VARCHAR(30)    NOT NULL," \
         "AGE              INT     NOT NULL," \
@@ -45,7 +45,7 @@ int main(int argc, char **argv) {
         "CREATED_AT       DATETIME);";
 
     /* Execute SQL statement */
-    rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg);
+   /* rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg);
 
     if( rc != SQLITE_OK )
     {
@@ -58,7 +58,7 @@ int main(int argc, char **argv) {
 
     //CREATE A GLYCEMIA TABLE;
     /* Create SQL statement */
-    sql = "CREATE TABLE IF NOT EXISTS GLYCEMIA("  \
+   /* sql = "CREATE TABLE IF NOT EXISTS GLYCEMIA("  \
       "ID            INT PRIMARY KEY  NOT NULL," \
       "VALUE         VARCHAR(30)      NOT NULL," \
       "TAKEN_AT      DATETIME         NOT NULL," \
@@ -67,7 +67,7 @@ int main(int argc, char **argv) {
       "FOREIGN KEY (USER_ID) REFERENCES USERS (ID));";
 
     /* Execute SQL statement */
-    rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg);
+  /*  rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg);
 
     if (rc != SQLITE_OK) {
         fprintf(stderr, "SQL error: %s\n", zErrMsg);
@@ -77,20 +77,23 @@ int main(int argc, char **argv) {
     }
     sqlite3_close(db);
 
-}
+}*/
 
 //get glycemia from user
 double inputsGlycemia(){
-    double glycemia;
-    double irrealMax = 100; //but can be different if unit is different.
+   char tempGlycemia;
+   double glycemia;
+   double irrealMax = 100; //but can be different if unit is different.
 
     do {
         printf(defaultUnit);
         printf(askForGlycemia);
-        scanf("%lf", &glycemia);
+        scanf("%s", &tempGlycemia);
         printf("\n");
+        glycemia = (double)tempGlycemia;
     } while (glycemia < 0 || glycemia > irrealMax);
     //need to write double with a dot not comma. how do we check that ? strchr() if it s a string;
+    //so what if everything is a string and we cast it to double when needed
 
     return glycemia;
 }
