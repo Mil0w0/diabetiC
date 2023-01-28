@@ -9,3 +9,4 @@ struct Entry {
 
 Entry *createEntry(double value, char *comment, char *date, int position);
 void addEntry(Entry *firstEntry, double i, char *comment, char *date, int position);
+int sendEntryToDatabase(Entry *glycemia);
