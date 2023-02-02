@@ -106,18 +106,26 @@ int main(int argc, char **argv)
             printf("1. Add an other glycemia log\n");
             printf("2. See your glycemia logs\n");
             printf("3. See your glycemia logs for a specific date\n");
-            printf("4. Log out\n");
-            printf("5. Delete your account\n");
+            printf("4. Update your target range glycemia\n");
+            printf("7. Log out\n");
+            printf("8. Delete your account\n");
             printf("9. Exit\n");
             scanf("%d", &choice);
 
             if(choice == 4)
             {
+                printf("\nPlease enter your targeted glycemia:\n");
+                scanf("%s", &targeted_glycemia);
+                // Update the targeted glycemia
+                updateTargetedGlycemia(db, zErrMsg, rc, username, targeted_glycemia);
+
+            }else if(choice == 7)
+            {
                 printf("\nYou are now disconnected\n\n");
                 printf("Goodbye %s !\n\n", username);
                 connected = 0;
 
-            }else if(choice == 5)
+            }else if(choice == 8)
             {
                 // Delete the user
                 deleteUser(db, zErrMsg, rc, username, password, connected);

@@ -24,6 +24,8 @@ void loginUser(sqlite3 *db, char *zErrMsg, int rc, char *username, char *passwor
 
 void createUser(sqlite3 *db, char *zErrMsg, int rc, char *username, char *password, char *age, char *targeted_glycemia, int connected);
 
+void updateTargetedGlycemia(sqlite3 *db, char *zErrMsg, int rc, char *username, char *targeted_glycemia);
+
 void deleteUser(sqlite3 *db, char *zErrMsg, int rc, char *username, char *password, int connected);
 
 bool checkValid(char *username, char *password, char* age, char* targeted_glycemia, sqlite3 *db, char *zErrMsg, int rc);

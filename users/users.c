@@ -159,6 +159,26 @@ void createUser(sqlite3 *db, char *zErrMsg, int rc, char *username, char *passwo
     }
 }
 
+void updateTargetedGlycemia(sqlite3 *db, char *zErrMsg, int rc, char *username, char* targeted_glycemia)
+{
+    char sqltest[200] = "UPDATE USERS SET TARGETED_GLYCEMIA = '";
+    strcat(sqltest, targeted_glycemia);
+    strcat(sqltest, "' WHERE USERNAME = '");
+    strcat(sqltest, username);
+    strcat(sqltest, "'");
+
+    rc = sqlite3_exec(db, sqltest, callback, 0, &zErrMsg);
+
+    if( rc != SQLITE_OK )
+    {
+        fprintf(stderr, "SQL error: %s", zErrMsg);
+        sqlite3_free(zErrMsg);
+    } else
+    {
+        fprintf(stdout, "\nTargeted glycemia updated successfully\n\n");
+    }
+}
+
 void deleteUser(sqlite3 *db, char *zErrMsg, int rc, char *username, char *password, int connected)
 {
     char sqltest[200] = "DELETE FROM USERS WHERE USERNAME = '";
