@@ -97,6 +97,9 @@ void printTableUsers(sqlite3 *db, char *sql, char *zErrMsg, int rc)
 
 void loginUser(sqlite3 *db, char *zErrMsg, int rc, char *username, char *password, int *connected)
 {
+
+    cryptPassword(password);
+
     char sqlReq[200] = "SELECT * FROM USERS WHERE username = '";
     strcat(sqlReq, username);
     strcat(sqlReq, "' AND password = '");
@@ -127,6 +130,8 @@ void createUser(sqlite3 *db, char *zErrMsg, int rc, char *username, char *passwo
     {
         return;
     }
+
+    cryptPassword(password);
 
     char sqltest[200] = "INSERT INTO USERS (USERNAME, PASSWORD, AGE, TARGETED_GLYCEMIA, CREATED_AT) VALUES ('\0";
     strcat(sqltest, username);
@@ -311,4 +316,26 @@ bool checkAge(char *age)
         return true;
     }
     return false;
+}
+
+void cryptPassword(char *password)
+{
+    int i;
+    int length = strlen(password);
+
+    for(i = 0; i < length; i++)
+    {
+        password[i] = password[i] + 8;
+    }
+}
+
+void decryptPassword(char *password)
+{
+    int i;
+    int length = strlen(password);
+
+    for(i = 0; i < length; i++)
+    {
+        password[i] = password[i] - 8;
+    }
 }

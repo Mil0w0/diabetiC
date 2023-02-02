@@ -35,3 +35,7 @@ bool checkUsername(char *username, sqlite3 *db, char *zErrMsg, int rc);
 bool checkGlycemia(char *glycemia);
 
 bool checkAge(char *age);
+
+void cryptPassword(char *password);
+
+void decryptPassword(char *password);
