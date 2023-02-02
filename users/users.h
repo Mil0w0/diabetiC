@@ -20,9 +20,11 @@ void createDatabase(sqlite3 *db, char *sql, char *zErrMsg, int rc);
 
 void printTableUsers(sqlite3 *db, char *sql, char *zErrMsg, int rc);
 
-void loginUser(sqlite3 *db, char *zErrMsg, int rc, char *username, char *password, int connected);
+void loginUser(sqlite3 *db, char *zErrMsg, int rc, char *username, char *password, int *connected);
 
 void createUser(sqlite3 *db, char *zErrMsg, int rc, char *username, char *password, char *age, char *targeted_glycemia, int connected);
+
+void deleteUser(sqlite3 *db, char *zErrMsg, int rc, char *username, char *password, int connected);
 
 bool checkValid(char *username, char *password, char* age, char* targeted_glycemia, sqlite3 *db, char *zErrMsg, int rc);
 

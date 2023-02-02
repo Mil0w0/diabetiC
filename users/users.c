@@ -95,7 +95,7 @@ void printTableUsers(sqlite3 *db, char *sql, char *zErrMsg, int rc)
     }
 }
 
-void loginUser(sqlite3 *db, char *zErrMsg, int rc, char *username, char *password, int connected)
+void loginUser(sqlite3 *db, char *zErrMsg, int rc, char *username, char *password, int *connected)
 {
     char sqlReq[200] = "SELECT * FROM USERS WHERE username = '";
     strcat(sqlReq, username);
@@ -113,7 +113,7 @@ void loginUser(sqlite3 *db, char *zErrMsg, int rc, char *username, char *passwor
     {
         printf("You are now connected !\n");
         printf("Welcome %s ^^\n\n", username);
-        connected = 1;
+        *connected = 1;
     }
 }
 
@@ -151,6 +151,27 @@ void createUser(sqlite3 *db, char *zErrMsg, int rc, char *username, char *passwo
         printf("You are now connected !\n");
         printf("Welcome %s ^^\n\n", username);
         connected = 1;
+    }
+}
+
+void deleteUser(sqlite3 *db, char *zErrMsg, int rc, char *username, char *password, int connected)
+{
+    char sqltest[200] = "DELETE FROM USERS WHERE USERNAME = '";
+    strcat(sqltest, username);
+    strcat(sqltest, "' AND PASSWORD = '");
+    strcat(sqltest, password);
+    strcat(sqltest, "'");
+
+    rc = sqlite3_exec(db, sqltest, callback, 0, &zErrMsg);
+
+    if( rc != SQLITE_OK )
+    {
+        fprintf(stderr, "SQL error: %s", zErrMsg);
+        sqlite3_free(zErrMsg);
+    } else
+    {
+        fprintf(stdout, "User deleted successfully\n");
+        connected = 0;
     }
 }
 

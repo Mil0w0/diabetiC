@@ -35,9 +35,6 @@ int main(int argc, char **argv)
     // Create the table users
     createTableUsers(db, sql, zErrMsg, rc);
 
-    // Print the table users for debug only
-    printTableUsers(db, sql, zErrMsg, rc);
-
     do 
     {
         // Case 1: User is not connected
@@ -46,6 +43,7 @@ int main(int argc, char **argv)
             printf("Welcome to your glycemia database, please choose an option:\n");
             printf("1. Log in with your user\n");
             printf("2. Create a new user\n");
+            printf("3. Print the table users (debug)\n");
             printf("9. Exit\n");
             scanf("%d", &choice);
 
@@ -62,7 +60,7 @@ int main(int argc, char **argv)
                 printf("\n");
 
                 // Check if the user exists and if the password is correct then connect the user
-                loginUser(db, zErrMsg, rc, username, password, connected);
+                loginUser(db, zErrMsg, rc, username, password, &connected);
 
             }else if(choice == 2)
             {
@@ -77,7 +75,7 @@ int main(int argc, char **argv)
                 printf("\n");
                 strcat(age, "\0");
 
-                printf("Please enter your password:\n");
+                printf("Please enter your password (Need 1 maj [A...Z], 1 min [a...z] and 1 number [0...9]):\n");
                 scanf("%s", &password);
                 printf("\n");
                 strcat(password, "\0");
@@ -89,6 +87,12 @@ int main(int argc, char **argv)
 
                 // Create a new user
                 createUser(db, zErrMsg, rc, username, password, age, targeted_glycemia, connected);
+
+            }else if(choice == 3)
+            {
+                // Print the table users for debug only
+                printf("\n");
+                printTableUsers(db, sql, zErrMsg, rc);
 
             }else if(choice == 9)
             {
@@ -103,6 +107,7 @@ int main(int argc, char **argv)
             printf("2. See your glycemia logs\n");
             printf("3. See your glycemia logs for a specific date\n");
             printf("4. Log out\n");
+            printf("5. Delete your account\n");
             printf("9. Exit\n");
             scanf("%d", &choice);
 
@@ -111,6 +116,16 @@ int main(int argc, char **argv)
                 printf("\nYou are now disconnected\n\n");
                 printf("Goodbye %s !\n\n", username);
                 connected = 0;
+
+            }else if(choice == 5)
+            {
+                // Delete the user
+                deleteUser(db, zErrMsg, rc, username, password, connected);
+
+                printf("\nYou are now disconnected\n\n");
+                printf("Goodbye %s !\n\n", username);
+                connected = 0;
+
             }else if(choice == 9)
             {
                 printf("Goodbye!\n");
