@@ -3,9 +3,9 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <string.h>
-#include "sqlite3.h"
+#include "../sqlite3.h"
 #include <time.h>
-#include "users/users.h"
+#include "../users/users.h"
 
 int main(int argc, char **argv)
 {

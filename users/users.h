@@ -3,22 +3,15 @@
 #include <stdbool.h>
 #include <string.h>
 #include "../sqlite3.h"
+#include "../database/database.h"
 #include <time.h>
 #include <ctype.h>
 
 void printok();
 
-int callback(void *NotUsed, int argc, char **argv, char **azColName);
-
 int checkUser(void *NotUsed, int argc, char **argv, char **azColName);
 
 bool LogIn(char *username, char *password, sqlite3 *db);
-
-void createTableUsers(sqlite3 *db, char *sql, char *zErrMsg, int rc);
-
-void createDatabase(sqlite3 *db, char *sql, char *zErrMsg, int rc);
-
-void printTableUsers(sqlite3 *db, char *sql, char *zErrMsg, int rc);
 
 void loginUser(sqlite3 *db, char *zErrMsg, int rc, char *username, char *password, int *connected);
 
