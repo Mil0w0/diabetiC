@@ -17,11 +17,10 @@ double inputsGlycemia(){
 
     do
     {
-        printf(defaultUnit);
-        printf(askForGlycemia);
-        scanf("%s", &tempGlycemia);
+        printf("%s", defaultUnit);
+        printf("%s", askForGlycemia);
+        scanf("%lf", &glycemia);
         printf("\n");
-        glycemia = (double)tempGlycemia;
     } while (glycemia < 0 || glycemia > irrealMax);
     //need to write double with a dot not comma. how do we check that ? strchr() if it s a string;
     //so what if everything is a string and we cast it to double when needed
