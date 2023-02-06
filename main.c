@@ -26,7 +26,7 @@ int main(int argc, char **argv) {
    printf("%s\n", n->next->comment);
 
    sendEntryToDatabase(n);
-
+   getGlycemiaDataFromDB(1);
    //Freeing everything before exiting
    while(n){
       printf("%d\n", n->entries);

@@ -90,3 +90,51 @@ int sendEntryToDatabase(Entry *glycemia){
    printf("%s", successfullySaved);
    sqlite3_close(db);
 }
+
+
+static int callback(void *NotUsed, int argc, char **argv, char **azColName)
+{
+   int i;
+   for (i = 0; i < argc; i++)
+   {
+      printf("%s = %s\n", azColName[i], argv[i] ? argv[i] : "NULL");
+   }
+   printf("\n");
+   return 0;
+}
+
+int getGlycemiaDataFromDB(unsigned int user_id){
+   sqlite3 *db;
+   char *zErrMsg = 0;
+   int rc;
+   sqlite3_stmt *res;
+
+   rc = sqlite3_open("database/diabetic.db", &db);
+
+   if (rc != SQLITE_OK) {
+      fprintf(stderr, "Cannot open database: %s\n", sqlite3_errmsg(db));
+      sqlite3_close(db);
+      return 1;
+   }
+
+   char *sql = "SELECT GLYCEMIA.id, value, taken_at, comment FROM GLYCEMIA, USERS WHERE USERS.id = :user_id";
+   rc = sqlite3_prepare_v2(db, sql, -1, &res, 0);
+
+   if (rc == SQLITE_OK) {
+      int parameter = sqlite3_bind_parameter_index(res, ":user_id");
+      sqlite3_bind_int(res, parameter, user_id);
+   }
+   else
+   {
+      fprintf(stderr, "Failed to execute statement: %s\n", sqlite3_errmsg(db));
+   }
+
+   rc = sqlite3_step(res);
+   if (rc != SQLITE_DONE) {
+      printf("execution failed: %s", sqlite3_errmsg(db));
+   }
+
+   sqlite3_finalize(res);
+   sqlite3_close(db);
+
+}

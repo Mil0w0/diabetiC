@@ -11,3 +11,4 @@ struct Entry {
 Entry *createEntry(double value, char *comment, char *date, int position, int user_id);
 void addEntry(Entry *firstEntry, double i, char *comment, char *date, int position, int user_id);
 int sendEntryToDatabase(Entry *glycemia);
+int getGlycemiaDataFromDB(unsigned int user_id);
