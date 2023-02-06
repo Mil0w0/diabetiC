@@ -1,9 +1,13 @@
 # Executables
 *.exe
+*/*.exe
 *.out
+*/*.exe
 
 #LA BDD
 test.db
+database/diabetic.db
 
 #IDE FOLDERS
-.vscode
+.idea
+.vscode.idea
