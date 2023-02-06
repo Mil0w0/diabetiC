@@ -36,16 +36,15 @@ int main(int argc, char **argv) {
     }
 
     //CREATE A USER TABLE IF NOT EXISTS;
-    /* Create SQL statement */
-   /* sql = "CREATE TABLE IF NOT EXISTS USERS("  \
+
+    sql = "CREATE TABLE IF NOT EXISTS USERS("  \
         "ID               INTEGER PRIMARY KEY AUTOINCREMENT     NOT NULL," \
         "USERNAME         VARCHAR(30)    NOT NULL," \
         "AGE              INT     NOT NULL," \
         "PASSWORD         VARCHAR(30)," \
-        "CREATED_AT       DATETIME);";
+        "CREATED_AT       DATETIME DEFAULT (CURRENT_TIMESTAMP));";
 
-    /* Execute SQL statement */
-   /* rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg);
+    rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg);
 
     if( rc != SQLITE_OK )
     {
@@ -57,17 +56,17 @@ int main(int argc, char **argv) {
     }
 
     //CREATE A GLYCEMIA TABLE;
-    /* Create SQL statement */
-   /* sql = "CREATE TABLE IF NOT EXISTS GLYCEMIA("  \
-      "ID            INT PRIMARY KEY  NOT NULL," \
+
+    sql = "CREATE TABLE IF NOT EXISTS GLYCEMIA("  \
+      "ID            INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL," \
       "VALUE         VARCHAR(30)      NOT NULL," \
-      "TAKEN_AT      DATETIME         NOT NULL," \
+      "TAKEN_AT      DATETIME         DEFAULT (CURRENT_TIMESTAMP)  NOT NULL," \
       "COMMENT       VARCHAR(255)," \
       "USER_ID       INT              NOT NULL,"\
       "FOREIGN KEY (USER_ID) REFERENCES USERS (ID));";
 
-    /* Execute SQL statement */
-  /*  rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg);
+
+    rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg);
 
     if (rc != SQLITE_OK) {
         fprintf(stderr, "SQL error: %s\n", zErrMsg);
@@ -85,7 +84,8 @@ double inputsGlycemia(){
    double glycemia;
    double irrealMax = 100; //but can be different if unit is different.
 
-    do {
+    do
+    {
         printf(defaultUnit);
         printf(askForGlycemia);
         scanf("%s", &tempGlycemia);
