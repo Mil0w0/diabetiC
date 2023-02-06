@@ -1,5 +1,5 @@
 // This file handles the creation of the chained list of entries;
-//gcc -o entries/entry.exe entries/entry.c glycemia/glycemia.c -lpthread -ldl -lm
+//gcc -o entries/entry.exe entries/entry.c glycemia/glycemia.c sqlite3.c -lpthread -ldl -lm
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -9,7 +9,7 @@
 #include "../glycemia/glycemia.h"
 
 //Create a node 
-Entry *createEntry(double value, char *comment, char *date, int position){
+Entry *createEntry(double value, char *comment, char *date, int position, int user_id){
     Entry *glycemia = malloc(sizeof(Entry)); 
     glycemia->next = NULL;
     glycemia->value = value;
@@ -25,7 +25,7 @@ Entry *createEntry(double value, char *comment, char *date, int position){
 }
 
 //Add an entry to the diary : a chained list of nodes
-void addEntry(Entry *lastEntry, double i, char *comment, char *date, int position){
+void addEntry(Entry *lastEntry, double i, char *comment, char *date, int position, int user_id){
     
     //if user add a new entry, position is calculated from the last entry
     //if we are recreating the list from the db data then position has already been calculated.
@@ -35,16 +35,18 @@ void addEntry(Entry *lastEntry, double i, char *comment, char *date, int positio
         }
         position = (lastEntry->entries + 1) ; 
     }
-    lastEntry->next = createEntry(i, comment, date, position);
+    lastEntry->next = createEntry(i, comment, date, position, user_id);
 }
 
 // modify the content of a node     
 
-//does data exist about this user ? 
-
-//send the entry to be keep in database
-
+//send the entry to be kept in database
 int sendEntryToDatabase(Entry *glycemia){
+
+   char successfullySaved[] = "Your glycemia has been saved into the database.\n";
+
+   int user_id = 1 ; //getUserId();
+
    sqlite3 *db;
    char *err_msg = 0;
    sqlite3_stmt *res;
@@ -57,18 +59,23 @@ int sendEntryToDatabase(Entry *glycemia){
       return 1;
       }
 
-   char *sql = "INSERT INTO GLYCEMIA(VALUE) VALUES (:value)";
+   char *sql = "INSERT INTO GLYCEMIA(VALUE, COMMENT, USER_ID) VALUES (:value, :comment, :user_id)";
    //we are not using the _v3 version cuz we don't need the special prepflags argumentw
    rc = sqlite3_prepare_v2(db, sql, -1, &res, 0);
 
    //Replacing the named parameters with the value we want
    if (rc == SQLITE_OK) {
-      //we save the position of the named parameter to use it later.
-      int idx = sqlite3_bind_parameter_index(res, ":value");
-      //if it was an int we would be using sqlite3_bind_int(), etc.
-      sqlite3_bind_double(res, idx, glycemia->value);
+      int parameter = sqlite3_bind_parameter_index(res, ":value");
+      sqlite3_bind_double(res, parameter, glycemia->value);
+
+      parameter =  sqlite3_bind_parameter_index(res, ":comment");
+      sqlite3_bind_text(res, parameter, glycemia->comment, strlen(glycemia->comment), NULL);
+
+      parameter =  sqlite3_bind_parameter_index(res, ":user_id");
+      sqlite3_bind_int(res, parameter, glycemia->user_id);
+
    } else {
-      //Error hzndling
+      //Error handling
       fprintf(stderr, "Failed to execute statement: %s\n", sqlite3_errmsg(db));
    }
 
@@ -82,16 +89,17 @@ int sendEntryToDatabase(Entry *glycemia){
    //Finishes the request, returns SQLITE_OK if all good if we don't do it can lead to segfaults
    sqlite3_finalize(res);
 
-   printf("Insert of double successfully done.\n");
+   printf(successfullySaved);
    sqlite3_close(db);
 }
-int main(int argc, char **argv){
 
+int main(int argc, char **argv){
+   int user_id = 1;
     //If user enters new information use inputs Function gt
     //Else if user is login in and we wanna access the past data use data from database.
 
-    Entry *n = createEntry(inputsGlycemia(), "comment", NULL, 1);
-    addEntry(n, inputsGlycemia(), "yes", NULL, 0); 
+    Entry *n = createEntry(inputsGlycemia(), "comment", NULL, 1, user_id);
+    addEntry(n, inputsGlycemia(), "yes", NULL, 0, user_id);
 
     printf("%.2lf\n", n->value);
     printf("%d\n", n->entries);
@@ -111,7 +119,6 @@ int main(int argc, char **argv){
         free(n); 
         n = tmp;
     }
-   
-            
+
     return 0;
 }
