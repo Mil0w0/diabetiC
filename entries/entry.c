@@ -43,15 +43,13 @@ void addEntry(Entry *lastEntry, double i, char *comment, char *date, int positio
 //send the entry to be kept in database
 int sendEntryToDatabase(Entry *glycemia){
 
-   char successfullySaved[] = "Your glycemia has been saved into the database.\n";
-
-   int user_id = 1 ; //getUserId();
+   char successfullySaved[] = "\nYour glycemia has been saved into the database.\n";
 
    sqlite3 *db;
    char *err_msg = 0;
    sqlite3_stmt *res;
 
-   int rc = sqlite3_open("test.db", &db);
+   int rc = sqlite3_open("database/diabetic.db", &db);
 
    if (rc != SQLITE_OK) {
       fprintf(stderr, "Cannot open database: %s\n", sqlite3_errmsg(db));
@@ -89,36 +87,6 @@ int sendEntryToDatabase(Entry *glycemia){
    //Finishes the request, returns SQLITE_OK if all good if we don't do it can lead to segfaults
    sqlite3_finalize(res);
 
-   printf(successfullySaved);
+   printf("%s", successfullySaved);
    sqlite3_close(db);
-}
-
-int main(int argc, char **argv){
-   int user_id = 1;
-    //If user enters new information use inputs Function gt
-    //Else if user is login in and we wanna access the past data use data from database.
-
-    Entry *n = createEntry(inputsGlycemia(), "comment", NULL, 1, user_id);
-    addEntry(n, inputsGlycemia(), "yes", NULL, 0, user_id);
-
-    printf("%.2lf\n", n->value);
-    printf("%d\n", n->entries);
-    printf("%s\n", n->comment);
-
-    printf("%.2lf\n",n->next->value);
-    printf("%d\n",n->next->entries);
-    printf("%s\n", n->next->comment);
-
-    sendEntryToDatabase(n);
-
-    //Freeing everything before exiting
-    while(n){
-        printf("%d\n", n->entries);
-        Entry * tmp = n->next;
-        free(n->comment);    
-        free(n); 
-        n = tmp;
-    }
-
-    return 0;
 }
