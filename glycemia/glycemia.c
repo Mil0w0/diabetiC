@@ -29,13 +29,6 @@ double inputsGlycemia(){
 }
 char * inputComment(){}
 
-char getGlycemiaDataFromDB(unsigned int user_id, unsigned int glycemia_position){
-    //SQL QUERY
-    //"SELECT GLYCEMIA.id, value, taken_at, comment FROM GLYCEMIA, USER WHERE USER.id ="
-    //user_id
-    //"AND GLYCEMIA.id = "
-    //glycemia_position
-}
 
 //test code
 // int main(int argc, char **argv){

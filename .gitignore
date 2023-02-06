@@ -6,6 +6,7 @@
 
 #LA BDD
 test.db
+database/diabetic.db
 
 #IDE FOLDERS
 .idea
