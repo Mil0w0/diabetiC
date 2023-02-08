@@ -108,8 +108,7 @@ SQLite est développé en C, language également utilisé pour notre application
 
 
 ## Mode d’utilisation :
-I.          Back-office et administrateur	2
-II.         Utilisateurs	3
+I.         Utilisateurs
 
 ## Synthèse des membres de l’équipe
 ● Loriane :

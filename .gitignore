@@ -2,7 +2,6 @@
 *.exe
 */*.exe
 *.out
-*/*.exe
 
 #LA BDD
 test.db
@@ -10,4 +9,4 @@ database/diabetic.db
 
 #IDE FOLDERS
 .idea
-.vscode.idea
+.vscode

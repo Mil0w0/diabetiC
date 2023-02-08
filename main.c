@@ -1,5 +1,6 @@
 //Compilation on linux : gcc main.c sqlite3.c -o main.exe -lpthread -ldl -lm
 //To compile : gcc main.c sqlite3.c database/database.c entries/entry.c glycemia/glycemia.c users/users.c -o main.exe
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
