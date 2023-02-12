@@ -36,6 +36,7 @@ void addEntry(Entry *lastEntry, double i, char *comment, char *date, int positio
         position = (lastEntry->entries + 1) ; 
     }
     lastEntry->next = createEntry(i, comment, date, position, user_id);
+    sendEntryToDatabase(lastEntry->next);
 }
 
 // modify the content of a node     
@@ -118,34 +119,40 @@ int getGlycemiaDataFromDB(unsigned int user_id){
       return -1;
    }
 
-   char *sql = "SELECT GLYCEMIA.id, value, taken_at, comment FROM GLYCEMIA, USERS WHERE USERS.id = :user_id";
-   rc = sqlite3_prepare_v2(db, sql, -1, &res, 0);
+   char *sql = "SELECT GLYCEMIA.id, value, taken_at, comment FROM GLYCEMIA, USERS WHERE USERS.id = 1";
+   // rc = sqlite3_prepare_v2(db, sql, -1, &res, 0);
 
-   if (rc == SQLITE_OK) {
-      int parameter = sqlite3_bind_parameter_index(res, ":user_id");
-      sqlite3_bind_int(res, parameter, user_id);
-   }
-   else
+   // if (rc == SQLITE_OK) {
+   //    int parameter = sqlite3_bind_parameter_index(res, ":user_id");
+   //    sqlite3_bind_int(res, parameter, user_id);
+   // }
+   // else
+   // {
+   //    fprintf(stderr, "Failed to execute statement: %s\n", sqlite3_errmsg(db));
+   // }
+   // rc = sqlite3_step(res);
+   // if (rc == SQLITE_ROW) {
+   //      printf(" -----%s-----\n", sqlite3_column_text(res, 0));
+   //      printf("| Valeur     : %s g/L\n", sqlite3_column_text(res, 1));
+   //      printf("| Date       : %s\n", sqlite3_column_text(res, 2));
+   //      printf("| Commentaire: %s\n", sqlite3_column_text(res, 3));
+   //      printf(" ------------\n\n");
+   //  }
+
+   // if (rc != SQLITE_DONE) {
+   //    printf("execution failed: %s !", sqlite3_errmsg(db));
+   // }
+
+   // sqlite3_finalize(res);
+
+   rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg);
+
+   if( rc != SQLITE_OK )
    {
-      fprintf(stderr, "Failed to execute statement: %s\n", sqlite3_errmsg(db));
+      fprintf(stderr, "SQL error: %s\n", zErrMsg);
+      sqlite3_free(zErrMsg);
    }
-
-   rc = sqlite3_step(res);
- 
-   if (rc == SQLITE_ROW) {
-        printf(" -----%s-----\n", sqlite3_column_text(res, 0));
-        printf("| Valeur     : %s g/L\n", sqlite3_column_text(res, 1));
-        printf("| Date       : %s\n", sqlite3_column_text(res, 2));
-        printf("| Commentaire: %s\n", sqlite3_column_text(res, 3));
-        printf(" ------------\n\n");
-
-    }
-
-   if (rc != SQLITE_DONE) {
-      printf("execution failed: %s !", sqlite3_errmsg(db));
-   }
-
-   sqlite3_finalize(res);
+   
    sqlite3_close(db);
    return 0;
 }

@@ -124,7 +124,7 @@ int main(int argc, char **argv)
             {
                //if pas de glycémia dans la bdd, createEntry first sinon addEntry
                Entry *n = createEntry(inputsGlycemia(), "comment", NULL, 1, user_id);
-               //addEntry(n, inputsGlycemia(), "yes", NULL, 0, user_id);
+               addEntry(n, inputsGlycemia(), "yes", NULL, 0, user_id);
 
             //    printf("%.2lf\n", n->value);
             //    printf("%d\n", n->entries);
