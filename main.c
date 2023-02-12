@@ -27,7 +27,7 @@ int main(int argc, char **argv)
     int user_id = 1;
 
     //CREATE  TEST DATABASE;
-    rc = sqlite3_open("test.db", &db);
+    rc = sqlite3_open("database/diabetic.db", &db);
 
     if( rc )
     {

@@ -21,7 +21,7 @@ int callback(void *NotUsed, int argc, char **argv, char **azColName)
 
 void createDatabase(sqlite3 *db, char *sql, char *zErrMsg, int rc)
 {
-   rc = sqlite3_open("diabetic.db", &db);
+   rc = sqlite3_open("database/diabetic.db", &db);
 
    if( rc )
    {
