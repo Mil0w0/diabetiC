@@ -111,7 +111,7 @@ int main(int argc, char **argv)
             createTableGlycemia(db,sql,zErrMsg, rc);
 
             printf("Now, please choose an option:\n");
-            printf("1. TESTING MILO STUFF\n");
+            printf("1. Add a glycemia log\n");
             printf("2. See your glycemia logs\n");
             printf("3. See your glycemia logs for a specific date\n");
             printf("4. Update your target range glycemia\n");
@@ -122,32 +122,33 @@ int main(int argc, char **argv)
 
             if (choice == 1)
             {
-               //TESTING MILO STUFF
+               //if pas de glycémia dans la bdd, createEntry first sinon addEntry
                Entry *n = createEntry(inputsGlycemia(), "comment", NULL, 1, user_id);
-               addEntry(n, inputsGlycemia(), "yes", NULL, 0, user_id);
+               //addEntry(n, inputsGlycemia(), "yes", NULL, 0, user_id);
 
-               printf("%.2lf\n", n->value);
-               printf("%d\n", n->entries);
-               printf("%s\n", n->comment);
+            //    printf("%.2lf\n", n->value);
+            //    printf("%d\n", n->entries);
+            //    printf("%s\n", n->comment);
 
-               printf("%.2lf\n",n->next->value);
-               printf("%d\n",n->next->entries);
-               printf("%s\n", n->next->comment);
+            //    printf("%.2lf\n",n->next->value);
+            //    printf("%d\n",n->next->entries);
+            //    printf("%s\n", n->next->comment);
 
                sendEntryToDatabase(n);
-               getGlycemiaDataFromDB(1);
-
+        
                //Freeing everything before exiting
                while(n){
-                  printf("%d\n", n->entries);
+                  //printf("%d\n", n->entries);
                   Entry * tmp = n->next;
                   free(n->comment);
                   free(n);
                   n = tmp;
                }
             }
-
-            if(choice == 4)
+            else if (choice == 2){
+                getGlycemiaDataFromDB(user_id);
+            }
+            else if(choice == 4)
             {
                 printf("\nPlease enter your targeted glycemia:\n");
                 scanf("%s", &targeted_glycemia);

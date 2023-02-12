@@ -103,6 +103,7 @@ static int callback(void *NotUsed, int argc, char **argv, char **azColName)
    return 0;
 }
 
+//return -1 if can't open db, 0, if all good, else if empty
 int getGlycemiaDataFromDB(unsigned int user_id){
    sqlite3 *db;
    char *zErrMsg = 0;
@@ -114,7 +115,7 @@ int getGlycemiaDataFromDB(unsigned int user_id){
    if (rc != SQLITE_OK) {
       fprintf(stderr, "Cannot open database: %s\n", sqlite3_errmsg(db));
       sqlite3_close(db);
-      return 1;
+      return -1;
    }
 
    char *sql = "SELECT GLYCEMIA.id, value, taken_at, comment FROM GLYCEMIA, USERS WHERE USERS.id = :user_id";
@@ -130,11 +131,21 @@ int getGlycemiaDataFromDB(unsigned int user_id){
    }
 
    rc = sqlite3_step(res);
+ 
+   if (rc == SQLITE_ROW) {
+        printf(" -----%s-----\n", sqlite3_column_text(res, 0));
+        printf("| Valeur     : %s g/L\n", sqlite3_column_text(res, 1));
+        printf("| Date       : %s\n", sqlite3_column_text(res, 2));
+        printf("| Commentaire: %s\n", sqlite3_column_text(res, 3));
+        printf(" ------------\n\n");
+
+    }
+
    if (rc != SQLITE_DONE) {
-      printf("execution failed: %s", sqlite3_errmsg(db));
+      printf("execution failed: %s !", sqlite3_errmsg(db));
    }
 
    sqlite3_finalize(res);
    sqlite3_close(db);
-
+   return 0;
 }
