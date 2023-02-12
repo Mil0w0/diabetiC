@@ -12,3 +12,4 @@ void createDatabase(sqlite3 *db, char *sql, char *zErrMsg, int rc);
 
 void printTableUsers(sqlite3 *db, char *sql, char *zErrMsg, int rc);
 
+void printTableGlycemia(sqlite3 *db, char *sql, char *zErrMsg, int rc);

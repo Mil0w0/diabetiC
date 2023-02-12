@@ -87,9 +87,22 @@ void createTableGlycemia(sqlite3 *db, char *sql, char *zErrMsg, int rc){
       sqlite3_free(zErrMsg);
    } else
    {
-      fprintf(stdout, "Table GLYCEMIA created successfully\n");
+      //fprintf(stdout, "Table GLYCEMIA created successfully\n");
    }
-   sqlite3_close(db);
+}
+
+
+void printTableGlycemia(sqlite3 *db, char *sql, char *zErrMsg, int rc)
+{
+   sql = "SELECT * FROM GLYCEMIA";
+
+   rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg);
+
+   if( rc != SQLITE_OK )
+   {
+      fprintf(stderr, "SQL error: %s\n", zErrMsg);
+      sqlite3_free(zErrMsg);
+   }
 }
 
 int createFullDatabase(){
@@ -149,8 +162,6 @@ int createFullDatabase(){
       sqlite3_free(zErrMsg);
    } else
    {
-      fprintf(stdout, "Table GLYCEMIA created successfully\n");
+      //fprintf(stdout, "Table GLYCEMIA created successfully\n");
    }
-   sqlite3_close(db);
-
 }

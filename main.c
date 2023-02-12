@@ -24,7 +24,7 @@ int main(int argc, char **argv)
     char password[30];
     char age[3];
     char targeted_glycemia[10];
-    int user_id = 1;
+    int user_id = 2;
 
     //CREATE  TEST DATABASE;
     rc = sqlite3_open("database/diabetic.db", &db);
@@ -50,6 +50,7 @@ int main(int argc, char **argv)
             printf("1. Log in with your user\n");
             printf("2. Create a new user\n");
             printf("3. Print the table users (debug)\n");
+            printf("4. See all  glycemia logs (debug)\n");
             printf("9. Exit\n");
             scanf("%d", &choice);
 
@@ -100,7 +101,14 @@ int main(int argc, char **argv)
                 printf("\n");
                 printTableUsers(db, sql, zErrMsg, rc);
 
-            }else if(choice == 9)
+            }
+            else if(choice == 4)
+            {
+                // Print the table glycemia for debug only
+                printf("\n");
+                printTableGlycemia(db, sql, zErrMsg, rc);
+            }
+            else if(choice == 9)
             {
                 printf("Goodbye!\n");
                 exit(0);
@@ -173,6 +181,7 @@ int main(int argc, char **argv)
             }else if(choice == 9)
             {
                 printf("Goodbye!\n");
+                sqlite3_close(db);
                 exit(0);
             }
         }

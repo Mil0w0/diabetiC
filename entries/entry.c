@@ -20,6 +20,7 @@ Entry *createEntry(double value, char *comment, char *date, int position, int us
         memcpy(glycemia->comment, comment, size);
     }
     glycemia->entries = position;
+    glycemia->user_id = user_id;
 
     return glycemia;
 }
@@ -89,7 +90,7 @@ int sendEntryToDatabase(Entry *glycemia){
    sqlite3_finalize(res);
 
    printf("%s", successfullySaved);
-   sqlite3_close(db);
+    ;
 }
 
 
@@ -106,6 +107,7 @@ static int callback(void *NotUsed, int argc, char **argv, char **azColName)
 
 //return -1 if can't open db, 0, if all good, else if empty
 int getGlycemiaDataFromDB(unsigned int user_id){
+   char *glycemiaLogsTitle = "--------All your glycemia logs--------\n";
    sqlite3 *db;
    char *zErrMsg = 0;
    int rc;
@@ -119,40 +121,28 @@ int getGlycemiaDataFromDB(unsigned int user_id){
       return -1;
    }
 
-   char *sql = "SELECT GLYCEMIA.id, value, taken_at, comment FROM GLYCEMIA, USERS WHERE USERS.id = 1";
-   // rc = sqlite3_prepare_v2(db, sql, -1, &res, 0);
+   char *sql = "SELECT id, value, taken_at, comment FROM GLYCEMIA WHERE GLYCEMIA.user_id = :user_id";
+   rc = sqlite3_prepare_v2(db, sql, -1, &res, 0);
 
-   // if (rc == SQLITE_OK) {
-   //    int parameter = sqlite3_bind_parameter_index(res, ":user_id");
-   //    sqlite3_bind_int(res, parameter, user_id);
-   // }
-   // else
-   // {
-   //    fprintf(stderr, "Failed to execute statement: %s\n", sqlite3_errmsg(db));
-   // }
-   // rc = sqlite3_step(res);
-   // if (rc == SQLITE_ROW) {
-   //      printf(" -----%s-----\n", sqlite3_column_text(res, 0));
-   //      printf("| Valeur     : %s g/L\n", sqlite3_column_text(res, 1));
-   //      printf("| Date       : %s\n", sqlite3_column_text(res, 2));
-   //      printf("| Commentaire: %s\n", sqlite3_column_text(res, 3));
-   //      printf(" ------------\n\n");
-   //  }
-
-   // if (rc != SQLITE_DONE) {
-   //    printf("execution failed: %s !", sqlite3_errmsg(db));
-   // }
-
-   // sqlite3_finalize(res);
-
-   rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg);
-
-   if( rc != SQLITE_OK )
-   {
-      fprintf(stderr, "SQL error: %s\n", zErrMsg);
-      sqlite3_free(zErrMsg);
+   if (rc == SQLITE_OK) {
+      int parameter = sqlite3_bind_parameter_index(res, ":user_id");
+      sqlite3_bind_int(res, parameter, user_id);
    }
+   else
+   {
+      fprintf(stderr, "Failed to execute statement: %s\n", sqlite3_errmsg(db));
+   }
+
+   printf("\n%s\n", glycemiaLogsTitle);
+   while (rc = sqlite3_step(res) == SQLITE_ROW) {
+        printf(" ----ID:%s-----\n", sqlite3_column_text(res, 0));
+        printf("| Valeur     : %s g/L\n", sqlite3_column_text(res, 1));
+        printf("| Date       : %s\n", sqlite3_column_text(res, 2));
+        printf("| Commentaire: %s\n", sqlite3_column_text(res, 3));
+        printf(" ------------\n\n");
+    }
+
+   sqlite3_finalize(res);
    
-   sqlite3_close(db);
    return 0;
 }
