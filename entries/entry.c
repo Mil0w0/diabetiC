@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include "sqlite3.h"
+#include "../sqlite3.h"
 #include "entry.h"
 #include "../glycemia/glycemia.h"
 
