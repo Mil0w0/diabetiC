@@ -24,7 +24,7 @@ int main(int argc, char **argv)
     char password[30];
     char age[3];
     char targeted_glycemia[10];
-    int user_id = 2;
+    int user_id = 1;
 
     //CREATE  TEST DATABASE;
     rc = sqlite3_open("database/diabetic.db", &db);
@@ -115,10 +115,11 @@ int main(int argc, char **argv)
             }
         // Case 2: User is connected
         }else if(connected == 1)
-        {
+        {   
+            //WE NEED TO GET THE USER_ID GLOBAL ONCE USER IS CONNECTED.
             createTableGlycemia(db,sql,zErrMsg, rc);
 
-            printf("Now, please choose an option:\n");
+            printf("----------MENU-----------:\n");
             printf("1. Add a glycemia log\n");
             printf("2. See your glycemia logs\n");
             printf("3. See your glycemia logs for a specific date\n");
@@ -130,8 +131,9 @@ int main(int argc, char **argv)
 
             if (choice == 1)
             {
-               //if pas de glycémia dans la bdd, createEntry first sinon addEntry
+               //if pas de glycémia dans la bdd, createEntry first 
                Entry *n = createEntry(inputsGlycemia(), "comment", NULL, 1, user_id);
+               //sinon addEntry
                addEntry(n, inputsGlycemia(), "yes", NULL, 0, user_id);
 
             //    printf("%.2lf\n", n->value);
@@ -142,6 +144,7 @@ int main(int argc, char **argv)
             //    printf("%d\n",n->next->entries);
             //    printf("%s\n", n->next->comment);
 
+            //si tout va bien on envoie à la bdd
                sendEntryToDatabase(n);
         
                //Freeing everything before exiting
@@ -154,6 +157,7 @@ int main(int argc, char **argv)
                }
             }
             else if (choice == 2){
+                //this is a select for now
                 getGlycemiaDataFromDB(user_id);
             }
             else if(choice == 4)
