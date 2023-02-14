@@ -121,12 +121,18 @@ int getGlycemiaDataFromDB(unsigned int user_id){
       return -1;
    }
 
-   char *sql = "SELECT id, value, taken_at, comment FROM GLYCEMIA WHERE GLYCEMIA.user_id = :user_id";
+   //binding parameters fails/
+   char date_format[] = "%d/%m/%Y, %H:%M";
+   
+   char *sql = "SELECT id, value, STRFTIME(\'%d/%m/%Y\', taken_at), STRFTIME(\'%Hh%M\', taken_at), comment FROM GLYCEMIA WHERE GLYCEMIA.user_id = :user_id";
    rc = sqlite3_prepare_v2(db, sql, -1, &res, 0);
 
    if (rc == SQLITE_OK) {
       int parameter = sqlite3_bind_parameter_index(res, ":user_id");
       sqlite3_bind_int(res, parameter, user_id);
+
+      //parameter = sqlite3_bind_parameter_index(res, ":date_format");
+      //sqlite3_bind_text(res, parameter, date_format, strlen(date_format), NULL);
    }
    else
    {
@@ -138,7 +144,8 @@ int getGlycemiaDataFromDB(unsigned int user_id){
         printf(" ----ID:%s-----\n", sqlite3_column_text(res, 0));
         printf("| Valeur     : %s g/L\n", sqlite3_column_text(res, 1));
         printf("| Date       : %s\n", sqlite3_column_text(res, 2));
-        printf("| Commentaire: %s\n", sqlite3_column_text(res, 3));
+        printf("| Heure      : %s\n", sqlite3_column_text(res, 3));
+        printf("| Commentaire: %s\n", sqlite3_column_text(res, 4));
         printf(" ------------\n\n");
     }
 
