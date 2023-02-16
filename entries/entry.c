@@ -106,8 +106,11 @@ static int callback(void *NotUsed, int argc, char **argv, char **azColName)
 }
 
 //return -1 if can't open db, 0, if all good, else if empty
+//return the entries
 int getGlycemiaDataFromDB(unsigned int user_id){
+   int emptyLogs = 0;
    char *glycemiaLogsTitle = "--------All your glycemia logs--------\n";
+   char *emptyLogsText = "No logs registered yet.\n";
    sqlite3 *db;
    char *zErrMsg = 0;
    int rc;
@@ -122,7 +125,7 @@ int getGlycemiaDataFromDB(unsigned int user_id){
    }
 
    //binding parameters fails/
-   char date_format[] = "%d/%m/%Y, %H:%M";
+   //char date_format[] = "%d/%m/%Y, %H:%M";
    
    char *sql = "SELECT id, value, STRFTIME(\'%d/%m/%Y\', taken_at), STRFTIME(\'%Hh%M\', taken_at), comment FROM GLYCEMIA WHERE GLYCEMIA.user_id = :user_id";
    rc = sqlite3_prepare_v2(db, sql, -1, &res, 0);
@@ -139,17 +142,44 @@ int getGlycemiaDataFromDB(unsigned int user_id){
       fprintf(stderr, "Failed to execute statement: %s\n", sqlite3_errmsg(db));
    }
 
-   printf("\n%s\n", glycemiaLogsTitle);
-   while (rc = sqlite3_step(res) == SQLITE_ROW) {
-        printf(" ----ID:%s-----\n", sqlite3_column_text(res, 0));
-        printf("| Valeur     : %s g/L\n", sqlite3_column_text(res, 1));
-        printf("| Date       : %s\n", sqlite3_column_text(res, 2));
-        printf("| Heure      : %s\n", sqlite3_column_text(res, 3));
-        printf("| Commentaire: %s\n", sqlite3_column_text(res, 4));
-        printf(" ------------\n\n");
-    }
+   // DISPLAY GLYCEMIA LOGS
 
-   sqlite3_finalize(res);
+   printf("\n%s\n", glycemiaLogsTitle);
+
+   if (sqlite3_step(res) != SQLITE_ROW){
+      printf("%s\n",emptyLogsText);
+      emptyLogs = 1;
+   }
+   else
+   {
+      printGlycemiaLog(res);
+      //create the glycemia log struct
+      createEntry(sqlite3_column_double(res, 1),
+                  sqlite3_column_text(res, 4),
+                  sqlite3_column_text(res, 2),
+                  sqlite3_column_int(res, 0),
+                  user_id
+                  );
+   }
+
+   while (rc = sqlite3_step(res) == SQLITE_ROW) 
+   {
+      printGlycemiaLog(res);
+      //add the glycemia log node to the chained list
+      //if first node exist:
+      //addEntry();
+   }
    
-   return 0;
+   sqlite3_finalize(res);
+   return emptyLogs;
+}
+
+//à partir de la struct pas de ça.
+void printGlycemiaLog(sqlite3_stmt *res){
+   printf(" ----ID:%d----\n", sqlite3_column_int(res, 0));
+   printf("| Value      : %.2lf g/L\n", sqlite3_column_double(res, 1));
+   printf("| Date       : %s\n", sqlite3_column_text(res, 2));
+   printf("| Time       : %s\n", sqlite3_column_text(res, 3));
+   printf("| Comment    : %s\n", sqlite3_column_text(res, 4));
+   printf(" ------------\n\n");
 }

@@ -24,7 +24,7 @@ int main(int argc, char **argv)
     char password[30];
     char age[3];
     char targeted_glycemia[10];
-    int user_id = 1;
+    int user_id = 2;
 
     //CREATE  TEST DATABASE;
     rc = sqlite3_open("database/diabetic.db", &db);
