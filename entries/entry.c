@@ -106,19 +106,8 @@ int sendEntryToDatabase(Entry *glycemia){
     ;
 }
 
-// static int callback(void *NotUsed, int argc, char **argv, char **azColName)
-// {
-//    int i;
-//    for (i = 0; i < argc; i++)
-//    {
-//       printf("%s = %s\n", azColName[i], argv[i] ? argv[i] : "NULL");
-//    }
-//    printf("\n");
-//    return 0;
-// }
-
-//return -1 if can't open db, 0, if all good, else if empty
-//return the entries
+//return the entries 
+//we can put an second argument which would be the sql statement so we can create different request and still get the struct back
 Entry *getGlycemiaDataFromDB(unsigned int user_id){
    int emptyLogs = 0;
    Entry *firstGlycemia = NULL;
