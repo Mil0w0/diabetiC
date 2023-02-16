@@ -118,6 +118,12 @@ int main(int argc, char **argv)
         {   
             //WE NEED TO GET THE USER_ID GLOBAL ONCE USER IS CONNECTED.
             createTableGlycemia(db,sql,zErrMsg, rc);
+            Entry * glycemia = getGlycemiaDataFromDB(user_id);
+
+            if (glycemia == NULL){
+                printf("Une erreur est survenue lors de la récupération des données.\nReconnextez-vous.\n\n");
+                break;
+            }
 
             printf("----------MENU-----------:\n");
             printf("1. Add a glycemia log\n");
@@ -132,9 +138,9 @@ int main(int argc, char **argv)
             if (choice == 1)
             {
                //if pas de glycémia dans la bdd, createEntry first 
-               Entry *n = createEntry(inputsGlycemia(), "comment", NULL, 1, user_id);
+               //Entry *n = createEntry(inputsGlycemia(), "comment", NULL, 1, user_id);
                //sinon addEntry
-               addEntry(n, inputsGlycemia(), "yes", NULL, 0, user_id);
+               addEntry(glycemia, inputsGlycemia(), "yes", NULL, 0, user_id);
 
             //    printf("%.2lf\n", n->value);
             //    printf("%d\n", n->entries);
@@ -144,21 +150,21 @@ int main(int argc, char **argv)
             //    printf("%d\n",n->next->entries);
             //    printf("%s\n", n->next->comment);
 
-            //si tout va bien on envoie à la bdd
-               sendEntryToDatabase(n);
+            //si tout va bien on envoie à la bdd la dernière glycémie
+               sendEntryToDatabase(glycemia);
         
                //Freeing everything before exiting
-               while(n){
+               while(glycemia){
                   //printf("%d\n", n->entries);
-                  Entry * tmp = n->next;
-                  free(n->comment);
-                  free(n);
-                  n = tmp;
+                  Entry * tmp = glycemia->next;
+                  free(glycemia->comment);
+                  free(glycemia);
+                  glycemia = tmp;
                }
             }
             else if (choice == 2){
-                //this is a select for now
-                getGlycemiaDataFromDB(user_id);
+                //show glycemia logs
+                
             }
             else if(choice == 4)
             {
