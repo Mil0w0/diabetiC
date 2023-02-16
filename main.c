@@ -24,7 +24,8 @@ int main(int argc, char **argv)
     char password[30];
     char age[3];
     char targeted_glycemia[10];
-    int user_id = 2;
+    int user_id = 3;
+    int emptyLogs = 0;
 
     //CREATE DATABASE;
     rc = sqlite3_open("database/diabetic.db", &db);
@@ -119,10 +120,11 @@ int main(int argc, char **argv)
             //WE NEED TO GET THE USER_ID GLOBAL ONCE USER IS CONNECTED.
             createTableGlycemia(db,sql,zErrMsg, rc);
             Entry * glycemia = getGlycemiaDataFromDB(user_id);
+            Entry *n ; 
+;
 
             if (glycemia == NULL){
-                printf("Une erreur est survenue lors de la récupération des données.\nReconnextez-vous.\n\n");
-                break;
+                emptyLogs = 1;
             }
 
             printf("----------MENU-----------:\n");
@@ -138,29 +140,19 @@ int main(int argc, char **argv)
             if (choice == 1)
             {
                //if pas de glycémia dans la bdd, createEntry first 
-               //Entry *n = createEntry(inputsGlycemia(), "comment", NULL, 1, user_id);
-               //sinon addEntry
-               addEntry(glycemia, inputsGlycemia(), "yes", NULL, 0, user_id);
-
-            //    printf("%.2lf\n", n->value);
-            //    printf("%d\n", n->entries);
-            //    printf("%s\n", n->comment);
-
-            //    printf("%.2lf\n",n->next->value);
-            //    printf("%d\n",n->next->entries);
-            //    printf("%s\n", n->next->comment);
-
-            //si tout va bien on envoie à la bdd la dernière glycémie
-               sendEntryToDatabase(glycemia);
-        
-               //Freeing everything before exiting
-               while(glycemia){
-                  //printf("%d\n", n->entries);
-                  Entry * tmp = glycemia->next;
-                  free(glycemia->comment);
-                  free(glycemia);
-                  glycemia = tmp;
+               if (emptyLogs == 1)
+               {
+                glycemia = createEntry(inputsGlycemia(), "comment", NULL, 1, user_id);
+                n = malloc(sizeof(Entry)); 
+                n = glycemia; //besoin de malloc ou pas?
+               } 
+                else 
+               {
+                n = addEntry(glycemia, inputsGlycemia(), "Newcomment", NULL, 0, user_id);
                }
+
+               //si tout va bien on envoie à la bdd la dernière glycémie
+               sendEntryToDatabase(n);
             }
             else if (choice == 2){
                 //show glycemia logs
@@ -190,11 +182,24 @@ int main(int argc, char **argv)
                 connected = 0;
 
             }else if(choice == 9)
-            {
+            {   
+                 //Freeing everything before exiting
+                while(glycemia){
+                  Entry * tmp = glycemia->next;
+                  free(glycemia->comment);
+                  free(glycemia);
+                  glycemia = tmp;
+               }
                 printf("Goodbye!\n");
                 sqlite3_close(db);
                 exit(0);
             }
+             while(glycemia){
+                  Entry * tmp = glycemia->next;
+                  free(glycemia->comment);
+                  free(glycemia);
+                  glycemia = tmp;
+                }
         }
     }while(choice != 9);
 

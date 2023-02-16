@@ -23,18 +23,20 @@ Entry *createEntry(double value, char *comment, char *date, int position, int us
         glycemia->comment = malloc(size);
         memcpy(glycemia->comment, comment, size);
     }
-    if (date != NULL) //if the user put a comment 
+    if (date != NULL)
     {
         int size = strlen(date);
+        //printf("size date:%s\n", size);
         glycemia->taken_at = malloc(size);
         memcpy(glycemia->taken_at, date, size);
     }
+    //ISSUE: overflowing strings sometimes.
 
     return glycemia;
 }
 
 //Add an entry to the diary : a chained list of nodes
-void addEntry(Entry *lastEntry, double i, char *comment, char *date, int position, int user_id){
+Entry *addEntry(Entry *lastEntry, double i, char *comment, char *date, int position, int user_id){
     
     //if user add a new entry, position is calculated from the last entry
     //if we are recreating the list from the db data then position has already been calculated.
@@ -43,9 +45,12 @@ void addEntry(Entry *lastEntry, double i, char *comment, char *date, int positio
             lastEntry = lastEntry->next;
         }
         position = (lastEntry->entries + 1) ; 
+
     }
+    //printf("last entry: %.2lf\n",i);
     lastEntry->next = createEntry(i, comment, date, position, user_id);
     //sendEntryToDatabase(lastEntry->next);
+    return lastEntry->next ;
 }
 
 // modify the content of a node     
@@ -116,7 +121,7 @@ int sendEntryToDatabase(Entry *glycemia){
 //return the entries
 Entry *getGlycemiaDataFromDB(unsigned int user_id){
    int emptyLogs = 0;
-   Entry *firstGlycemia;
+   Entry *firstGlycemia = NULL;
    char *emptyLogsText = "No logs registered yet.\n";
    sqlite3 *db;
    char *zErrMsg = 0;
@@ -133,6 +138,7 @@ Entry *getGlycemiaDataFromDB(unsigned int user_id){
    //binding parameters fails/
    //char date_format[] = "%d/%m/%Y, %H:%M";
    
+   //ORDER BY ID pour avoir dans l'ordre ou rajouter position dans la bdd et order by position
    char *sql = "SELECT id, value, STRFTIME(\'%d/%m/%Y\', taken_at), comment FROM GLYCEMIA WHERE GLYCEMIA.user_id = :user_id";
    rc = sqlite3_prepare_v2(db, sql, -1, &res, 0);
 
@@ -173,7 +179,7 @@ Entry *getGlycemiaDataFromDB(unsigned int user_id){
                sqlite3_column_double(res, 1),
                sqlite3_column_text(res, 3),
                sqlite3_column_text(res, 2),
-               sqlite3_column_int(res, 0),
+               0,
                user_id
                );
       //printGlycemiaLog(res);
@@ -181,19 +187,20 @@ Entry *getGlycemiaDataFromDB(unsigned int user_id){
    
    sqlite3_finalize(res);
    return firstGlycemia;
+   
 }
 
-//à partir de la struct pas de ça.
-void printGlycemiaLog(sqlite3_stmt *res){
-   char *glycemiaLogsTitle = "--------All your glycemia logs--------\n";
 
-   //printf("\n%s\n", glycemiaLogsTitle);
-   printf(" ----ID:%d----\n", sqlite3_column_int(res, 0));
-   printf("| Value      : %.2lf g/L\n", sqlite3_column_double(res, 1));
-   printf("| Date       : %s\n", sqlite3_column_text(res, 2));
-   printf("| Comment    : %s\n", sqlite3_column_text(res, 3));
-   printf(" ------------\n\n");
-}
+// void printGlycemiaLog(sqlite3_stmt *res){
+//    char *glycemiaLogsTitle = "--------All your glycemia logs--------\n";
+
+//    //printf("\n%s\n", glycemiaLogsTitle);
+//    printf(" ----ID:%d----\n", sqlite3_column_int(res, 0));
+//    printf("| Value      : %.2lf g/L\n", sqlite3_column_double(res, 1));
+//    printf("| Date       : %s\n", sqlite3_column_text(res, 2));
+//    printf("| Comment    : %s\n", sqlite3_column_text(res, 3));
+//    printf(" ------------\n\n");
+// }
 
 void showEntries(Entry *glycemia) {
    char *emptyLogsText = "No logs registered yet.\n";
