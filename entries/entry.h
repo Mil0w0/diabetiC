@@ -13,3 +13,4 @@ void addEntry(Entry *firstEntry, double value, char *comment, char *date, int po
 int sendEntryToDatabase(Entry *glycemia);
 Entry *getGlycemiaDataFromDB(unsigned int user_id);
 void printGlycemiaLog(sqlite3_stmt *res);
+void showEntries(Entry *firstEntry);

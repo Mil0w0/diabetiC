@@ -11,16 +11,24 @@
 //Create a node 
 Entry *createEntry(double value, char *comment, char *date, int position, int user_id){
     Entry *glycemia = malloc(sizeof(Entry)); 
+
     glycemia->next = NULL;
     glycemia->value = value;
+    glycemia->entries = position;
+    glycemia->user_id = user_id;
+    
     if (comment != NULL) //if the user put a comment 
     {
         int size = strlen(comment);
         glycemia->comment = malloc(size);
         memcpy(glycemia->comment, comment, size);
     }
-    glycemia->entries = position;
-    glycemia->user_id = user_id;
+    if (date != NULL) //if the user put a comment 
+    {
+        int size = strlen(date);
+        glycemia->taken_at = malloc(size);
+        memcpy(glycemia->taken_at, date, size);
+    }
 
     return glycemia;
 }
@@ -37,7 +45,7 @@ void addEntry(Entry *lastEntry, double i, char *comment, char *date, int positio
         position = (lastEntry->entries + 1) ; 
     }
     lastEntry->next = createEntry(i, comment, date, position, user_id);
-    sendEntryToDatabase(lastEntry->next);
+    //sendEntryToDatabase(lastEntry->next);
 }
 
 // modify the content of a node     
@@ -93,17 +101,16 @@ int sendEntryToDatabase(Entry *glycemia){
     ;
 }
 
-
-static int callback(void *NotUsed, int argc, char **argv, char **azColName)
-{
-   int i;
-   for (i = 0; i < argc; i++)
-   {
-      printf("%s = %s\n", azColName[i], argv[i] ? argv[i] : "NULL");
-   }
-   printf("\n");
-   return 0;
-}
+// static int callback(void *NotUsed, int argc, char **argv, char **azColName)
+// {
+//    int i;
+//    for (i = 0; i < argc; i++)
+//    {
+//       printf("%s = %s\n", azColName[i], argv[i] ? argv[i] : "NULL");
+//    }
+//    printf("\n");
+//    return 0;
+// }
 
 //return -1 if can't open db, 0, if all good, else if empty
 //return the entries
@@ -121,7 +128,6 @@ Entry *getGlycemiaDataFromDB(unsigned int user_id){
    if (rc != SQLITE_OK) {
       fprintf(stderr, "Cannot open database: %s\n", sqlite3_errmsg(db));
       sqlite3_close(db);
-      return -1;
    }
 
    //binding parameters fails/
@@ -157,7 +163,7 @@ Entry *getGlycemiaDataFromDB(unsigned int user_id){
                   sqlite3_column_int(res, 0),
                   user_id
                   );
-      printGlycemiaLog(res);
+      //printGlycemiaLog(res);
    }
 
    while (rc = sqlite3_step(res) == SQLITE_ROW) 
@@ -170,7 +176,7 @@ Entry *getGlycemiaDataFromDB(unsigned int user_id){
                sqlite3_column_int(res, 0),
                user_id
                );
-      printGlycemiaLog(res);
+      //printGlycemiaLog(res);
    }
    
    sqlite3_finalize(res);
@@ -181,10 +187,35 @@ Entry *getGlycemiaDataFromDB(unsigned int user_id){
 void printGlycemiaLog(sqlite3_stmt *res){
    char *glycemiaLogsTitle = "--------All your glycemia logs--------\n";
 
-   printf("\n%s\n", glycemiaLogsTitle);
+   //printf("\n%s\n", glycemiaLogsTitle);
    printf(" ----ID:%d----\n", sqlite3_column_int(res, 0));
    printf("| Value      : %.2lf g/L\n", sqlite3_column_double(res, 1));
    printf("| Date       : %s\n", sqlite3_column_text(res, 2));
    printf("| Comment    : %s\n", sqlite3_column_text(res, 3));
    printf(" ------------\n\n");
+}
+
+void showEntries(Entry *glycemia) {
+   char *emptyLogsText = "No logs registered yet.\n";
+   char *glycemiaLogsTitle = "--------All your glycemia logs--------\n";
+    
+   if (glycemia == NULL)
+   {
+      printf("%s",emptyLogsText);
+   } else 
+   {
+      printf("\n%s\n", glycemiaLogsTitle);
+   }
+   
+   while(glycemia)
+   {
+      printf("----ID:%d----\n", glycemia->entries);
+      printf("| Value      : %.2lf g/L\n",glycemia->value);
+      printf("| Date       : %s\n",glycemia->taken_at);
+      printf("| Comment    : %s\n",glycemia->comment);
+      printf(" ------------\n\n");
+
+      glycemia = glycemia->next;
+   }
+   
 }

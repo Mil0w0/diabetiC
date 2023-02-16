@@ -26,7 +26,7 @@ int main(int argc, char **argv)
     char targeted_glycemia[10];
     int user_id = 2;
 
-    //CREATE  TEST DATABASE;
+    //CREATE DATABASE;
     rc = sqlite3_open("database/diabetic.db", &db);
 
     if( rc )
@@ -164,6 +164,7 @@ int main(int argc, char **argv)
             }
             else if (choice == 2){
                 //show glycemia logs
+                showEntries(glycemia);
                 
             }
             else if(choice == 4)
