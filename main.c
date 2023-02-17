@@ -71,9 +71,6 @@ int main(int argc, char **argv)
                 // Check if the user exists and if the password is correct then connect the user
                 loginUser(db, zErrMsg, rc, username, password, &connected, &user_id);
 
-                printf("ID IS = %d", user_id);
-
-
             }else if(choice == '2')
             {
 

@@ -113,8 +113,6 @@ int getUserID(sqlite3 *db, char *zErrMsg, int rc, char *username, char *password
 
     sqlite3_finalize(res);
 
-    printf("ID : %d\n", rc);
-
     if( rc == SQLITE_OK )
     {
         printf("Failed to get user ID\n\n");
