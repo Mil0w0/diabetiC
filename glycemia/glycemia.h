@@ -1,5 +1,5 @@
 double inputsGlycemia();
-//void alertGlycemiaOutOfRange(int glycemia);
+void alertGlycemiaOutOfRange(double glycemia, int unit);
 
 char * inputComment();
 
