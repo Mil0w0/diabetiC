@@ -114,7 +114,7 @@ void loginUser(sqlite3 *db, char *zErrMsg, int rc, char *username, char *passwor
     {
         if(strcmp(username, admin) == 0 && strcmp(password, adminPassword) == 0)
         {
-            printf("You are now in Dev Mod, don't do shit i'm watching you\n");
+            printf("You are now in Dev Mode !\n");
             *connected = 2;
         }else
         {

@@ -240,13 +240,13 @@ int main(int argc, char **argv)
             {
                 printf("\nAre you sure you want to delete your account? (y/n)\n");
                 scanf(" %c", &choice);
-                if(choice == 'y')
+                if(choice == 'y' || choice == 'Y')
                 {
                     deleteUser(db, zErrMsg, rc, username, password, connected);
                     printf("\nYou are now disconnected\n\n");
                     printf("Goodbye %s !\n\n", username);
                     connected = 0;
-                }else if(choice == 'n')
+                }else if(choice == 'n' || choice == 'N')
                 {
                     printf("\n");
                 }
