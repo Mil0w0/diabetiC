@@ -13,6 +13,7 @@ char askForGlycemia[] = "Enter current glycemia : ";
 //get glycemia from user
 double inputsGlycemia(){
    char *eptr;
+   int unit = 1; // 1 = g/L
    double glycemia = -1.0;
    double irrealMax = 30; //but can be different if unit is different.
 
@@ -27,20 +28,39 @@ double inputsGlycemia(){
         //Verification and convert input to double
         if (!checkGlycemia(tempGlycemia)){
             printf("\n"); 
-            printf("Targeted glycemia must be numeric !\n\n");
+            printf("Glycemia must be numeric !\n\n");
         } else {
             glycemia = strtod(tempGlycemia, &eptr);  
         }
 
     } while (glycemia <= 0 || glycemia > irrealMax);
 
+   alertGlycemiaOutOfRange(glycemia,unit);
     return glycemia;
 }
+
+void alertGlycemiaOutOfRange(double glycemia, int unit){
+   char *hyperAlert = "You are in hyperglycemia ! You might want to put more insulin but be careful.\n";
+   char *hypoAlert = "You are in hypoglycemia ! Eat some fast carbs like 3 sugars (15g of carbs)\n";
+   char *severeHypoAlert = "You are in severe hypoglycemia. It can be life-threatening. Get help.\n";
+
+   //IF UNIT == 1 THEN UNIT IS g/L and
+   double max = (unit == 1) ? 1.80 : 180;
+   double low = (unit == 1) ? 0.70 : 70;
+   double min = (unit == 1) ? 0.50 : 50;
+
+   if (glycemia >= max)
+   {
+      printf("%s", hyperAlert);
+   }
+   else if (glycemia <= min)
+   {
+      printf("%s", severeHypoAlert);
+   }
+   else if (glycemia <= low)
+   {
+      printf("%s", hypoAlert);
+   }
+}
+
 char * inputComment(){}
-
-
-//test code
-// int main(int argc, char **argv){
-//     double glycemia = inputsGlycemia();
-//     printf("%.2lf", glycemia);
-// }
