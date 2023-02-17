@@ -214,3 +214,31 @@ void showEntries(Entry *glycemia) {
    }
    
 }
+
+void showEntriesForDate(Entry *glycemia, char *date) {
+   char *emptyLogsText = "No logs registered yet.\n";
+   char *glycemiaLogsTitle = "--------All your glycemia logs--------\n";
+    
+   if (glycemia == NULL)
+   {
+      printf("%s",emptyLogsText);
+   } else 
+   {
+      printf("\n%s\n", glycemiaLogsTitle);
+   }
+   
+   while(glycemia)
+   {
+      if (strcmp(glycemia->taken_at, date) == 0)
+      {
+         printf("----ID:%d----\n", glycemia->entries);
+         printf("| Value      : %.2lf g/L\n",glycemia->value);
+         printf("| Date       : %s\n",glycemia->taken_at);
+         printf("| Comment    : %s\n",glycemia->comment);
+         printf(" ------------\n\n");
+
+      }
+      glycemia = glycemia->next;
+   }
+
+}

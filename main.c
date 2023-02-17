@@ -144,6 +144,11 @@ int main(int argc, char **argv)
                 //show glycemia logs
                 showEntries(glycemia);
                 
+            }else if(choice == '3')
+            {
+                //show glycemia logs for a specific date
+                showEntriesForDate(glycemia);
+                
             }else if(choice == '4')
             {
                 printf("\nPlease enter your targeted glycemia:\n");
