@@ -39,7 +39,11 @@ bool LogIn(char *username, char *password, sqlite3 *db)
 void loginUser(sqlite3 *db, char *zErrMsg, int rc, char *username, char *password, int *connected)
 {
 
+    char admin[30] = "admin\0";
+    char adminPassword[30] = "Respons11\0";
+
     cryptPassword(password);
+    cryptPassword(adminPassword);
 
     char sqlReq[200] = "SELECT * FROM USERS WHERE username = '";
     strcat(sqlReq, username);
@@ -55,9 +59,16 @@ void loginUser(sqlite3 *db, char *zErrMsg, int rc, char *username, char *passwor
         sqlite3_free(zErrMsg);
     } else
     {
+        if(strcmp(username, admin) == 0 && strcmp(password, adminPassword) == 0)
+        {
+            printf("You are now in Dev Mod, don't do shit i'm watching you\n");
+            *connected = 2;
+        }else
+        {
         printf("You are now connected !\n");
         printf("Welcome %s ^^\n\n", username);
         *connected = 1;
+        }
     }
 }
 
@@ -66,6 +77,9 @@ void createUser(sqlite3 *db, char *zErrMsg, int rc, char *username, char *passwo
     // Check if all the fields are valid
     bool check = false;
 
+    char admin[30] = "admin\0";
+    char adminPassword[30] = "Respons11\0";
+
     check = checkValid(username, password, age, targeted_glycemia, db, zErrMsg, rc);
     if(check == false)
     {
@@ -73,6 +87,7 @@ void createUser(sqlite3 *db, char *zErrMsg, int rc, char *username, char *passwo
     }
 
     cryptPassword(password);
+    cryptPassword(adminPassword);
 
     char sqltest[200] = "INSERT INTO USERS (USERNAME, PASSWORD, AGE, TARGETED_GLYCEMIA, CREATED_AT) VALUES ('\0";
     strcat(sqltest, username);
@@ -93,10 +108,17 @@ void createUser(sqlite3 *db, char *zErrMsg, int rc, char *username, char *passwo
         sqlite3_free(zErrMsg);
     } else
     {
+        if(strcmp(username, admin) == 0 && strcmp(password, adminPassword) == 0)
+        {
+            printf("You are now in Dev Mod, don't do shit i'm watching you\n");
+            connected = 2;
+        }else
+        {
         fprintf(stdout, "User created successfully\n");
         printf("You are now connected !\n");
         printf("Welcome %s ^^\n\n", username);
         connected = 1;
+        }
     }
 }
 
