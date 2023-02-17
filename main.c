@@ -11,6 +11,7 @@
 #include "database/database.h"
 #include "entries/entry.h"
 #include "glycemia/glycemia.h"
+#include "functions/functions.h"
 
 int main(int argc, char **argv)
 {
@@ -63,7 +64,7 @@ int main(int argc, char **argv)
                 printf("Please enter your password:\n");
                 scanf("%s", &password);
                 strcat(password, "\0");
-                printf("\n");
+                cls();
 
                 // Check if the user exists and if the password is correct then connect the user
                 loginUser(db, zErrMsg, rc, username, password, &connected);

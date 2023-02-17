@@ -7,6 +7,7 @@
 #include "../sqlite3.h"
 #include "entry.h"
 #include "../glycemia/glycemia.h"
+#include "../functions/functions.h"
 
 //Create a node 
 Entry *createEntry(double value, char *comment, char *date, int position, int user_id){

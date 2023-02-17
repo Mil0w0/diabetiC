@@ -4,6 +4,7 @@
 #include <string.h>
 #include "../sqlite3.h"
 #include "../users/users.h"
+#include "../functions/functions.h"
 #include "glycemia.h"
 
 //text variables to be put in an env file later
