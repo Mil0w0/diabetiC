@@ -138,17 +138,25 @@ int main(int argc, char **argv)
             scanf("%d", &choice);
 
             if (choice == 1)
-            {
+            {       
+
+                double glycemiaValue = inputsGlycemia();
+                char *commentValue = inputComment();
+
+                if (!glycemiaValue){
+                    printf("ERROR");
+                }
+
                //if pas de glycémia dans la bdd, createEntry first 
                if (emptyLogs == 1)
                {
-                glycemia = createEntry(inputsGlycemia(), "comment", NULL, 1, user_id);
+                glycemia = createEntry(glycemiaValue,commentValue, NULL, 1, user_id);
                 n = malloc(sizeof(Entry)); 
                 n = glycemia; //besoin de malloc ou pas?
-               } 
+                } 
                 else 
                {
-                n = addEntry(glycemia, inputsGlycemia(), "Newcomment", NULL, 0, user_id);
+                n = addEntry(glycemia, glycemiaValue,  commentValue, NULL, 0, user_id);
                }
 
                //si tout va bien on envoie à la bdd la dernière glycémie

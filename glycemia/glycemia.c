@@ -36,7 +36,22 @@ double inputsGlycemia(){
 
     return glycemia;
 }
-char * inputComment(){}
+char * inputComment(){
+    int maxChars = 255;
+    char *askForComment = "Any comments ? Leave empty if none.\n";
+    printf("%s\n", askForComment);
+
+    char *input = malloc(maxChars); 
+    fflush(stdin);
+    char *gettingInput = fgets(input, maxChars, stdin);
+
+    if (gettingInput == NULL){
+        printf("\nCouldn't get input correctly.\n");
+    }
+
+    return input;
+  
+}
 
 
 //test code
