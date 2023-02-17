@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "../sqlite3.h"
+#include "../users/users.h"
 #include "glycemia.h"
 
 //text variables to be put in an env file later
@@ -11,19 +12,27 @@ char askForGlycemia[] = "Enter current glycemia : ";
 
 //get glycemia from user
 double inputsGlycemia(){
-   char tempGlycemia;
-   double glycemia;
-   double irrealMax = 100; //but can be different if unit is different.
+   char *eptr;
+   double glycemia = -1.0;
+   double irrealMax = 30; //but can be different if unit is different.
 
     do
-    {
+    {   
+        char tempGlycemia[10];
         printf("%s", defaultUnit);
         printf("%s", askForGlycemia);
-        scanf("%lf", &glycemia);
-        printf("\n");
-    } while (glycemia < 0 || glycemia > irrealMax);
-    //need to write double with a dot not comma. how do we check that ? strchr() if it s a string;
-    //so what if everything is a string and we cast it to double when needed
+        scanf("%s", &tempGlycemia);
+        strcat(tempGlycemia, "\0");
+
+        //Verification and convert input to double
+        if (!checkGlycemia(tempGlycemia)){
+            printf("\n"); 
+            printf("Targeted glycemia must be numeric !\n\n");
+        } else {
+            glycemia = strtod(tempGlycemia, &eptr);  
+        }
+
+    } while (glycemia <= 0 || glycemia > irrealMax);
 
     return glycemia;
 }

@@ -237,11 +237,11 @@ bool checkGlycemia(char *glycemia)
 {
     int i, j, check = 0;
     int length = strlen(glycemia);
-    char validChars[12] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.', ','};
+    char validChars[11] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.'};
 
     for(i = 0; i < length; i++)
     {
-        for(j = 0; j < 10; j++)
+        for(j = 0; j < 11; j++)
         {
             if(glycemia[i] == validChars[j])
             {
