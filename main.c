@@ -42,6 +42,9 @@ int main(int argc, char **argv)
     // Create the table users
     createTableUsers(db, sql, zErrMsg, rc);
 
+    // Create the admin user
+    createAdminUser(db, sql, zErrMsg, rc);
+
     do 
     {
         // Case 1: User is not connected
