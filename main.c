@@ -24,7 +24,7 @@ int main(int argc, char **argv)
     char password[30];
     char age[3];
     char targeted_glycemia[10];
-    int user_id = 3;
+    int user_id = 0;
     int emptyLogs = 0;
 
     //CREATE DATABASE;
@@ -69,7 +69,10 @@ int main(int argc, char **argv)
                 printf("\n");
 
                 // Check if the user exists and if the password is correct then connect the user
-                loginUser(db, zErrMsg, rc, username, password, &connected);
+                loginUser(db, zErrMsg, rc, username, password, &connected, &user_id);
+
+                printf("ID IS = %d", user_id);
+
 
             }else if(choice == '2')
             {

@@ -103,7 +103,6 @@ int sendEntryToDatabase(Entry *glycemia){
    sqlite3_finalize(res);
 
    printf("%s", successfullySaved);
-    ;
 }
 
 //return the entries 
