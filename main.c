@@ -18,7 +18,7 @@ int main(int argc, char **argv)
     char *zErrMsg = 0;
     int rc;
     char *sql;
-    int choice;
+    char choice;
     int connected = 0;
     char username[30];
     char password[30];
@@ -42,6 +42,9 @@ int main(int argc, char **argv)
     // Create the table users
     createTableUsers(db, sql, zErrMsg, rc);
 
+    // Create the admin user
+    createAdminUser(db, sql, zErrMsg, rc);
+
     do 
     {
         // Case 1: User is not connected
@@ -50,12 +53,10 @@ int main(int argc, char **argv)
             printf("Welcome to your glycemia database, please choose an option:\n");
             printf("1. Log in with your user\n");
             printf("2. Create a new user\n");
-            printf("3. Print the table users (debug)\n");
-            printf("4. See all  glycemia logs (debug)\n");
             printf("9. Exit\n");
-            scanf("%d", &choice);
+            scanf(" %c", &choice);
 
-            if(choice == 1)
+            if(choice == '1')
             {
                 printf("\nPlease enter your username:\n");
                 scanf("%s", &username);
@@ -70,7 +71,7 @@ int main(int argc, char **argv)
                 // Check if the user exists and if the password is correct then connect the user
                 loginUser(db, zErrMsg, rc, username, password, &connected);
 
-            }else if(choice == 2)
+            }else if(choice == '2')
             {
 
                 printf("\nPlease enter your username:\n");
@@ -96,20 +97,7 @@ int main(int argc, char **argv)
                 // Create a new user
                 createUser(db, zErrMsg, rc, username, password, age, targeted_glycemia, connected);
 
-            }else if(choice == 3)
-            {
-                // Print the table users for debug only
-                printf("\n");
-                printTableUsers(db, sql, zErrMsg, rc);
-
-            }
-            else if(choice == 4)
-            {
-                // Print the table glycemia for debug only
-                printf("\n");
-                printTableGlycemia(db, sql, zErrMsg, rc);
-            }
-            else if(choice == 9)
+            }else if(choice == '9')
             {
                 printf("Goodbye!\n");
                 exit(0);
@@ -131,13 +119,12 @@ int main(int argc, char **argv)
             printf("1. Add a glycemia log\n");
             printf("2. See your glycemia logs\n");
             printf("3. See your glycemia logs for a specific date\n");
-            printf("4. Update your target range glycemia\n");
-            printf("7. Log out\n");
-            printf("8. Delete your account\n");
+            printf("7. Settings\n");
+            printf("8. Log out\n");
             printf("9. Exit\n");
-            scanf("%d", &choice);
+            scanf(" %c", &choice);
 
-            if (choice == 1)
+            if (choice == '1')
             {
                //if pas de glycémia dans la bdd, createEntry first 
                if (emptyLogs == 1)
@@ -153,35 +140,28 @@ int main(int argc, char **argv)
 
                //si tout va bien on envoie à la bdd la dernière glycémie
                sendEntryToDatabase(n);
-            }
-            else if (choice == 2){
+            }else if (choice == '2'){
                 //show glycemia logs
                 showEntries(glycemia);
                 
-            }
-            else if(choice == 4)
+            }else if(choice == '4')
             {
                 printf("\nPlease enter your targeted glycemia:\n");
                 scanf("%s", &targeted_glycemia);
                 // Update the targeted glycemia
                 updateTargetedGlycemia(db, zErrMsg, rc, username, targeted_glycemia);
 
-            }else if(choice == 7)
+            }else if(choice == '7')
+            {
+                connected = 3;   
+
+            }else if(choice == '8')
             {
                 printf("\nYou are now disconnected\n\n");
                 printf("Goodbye %s !\n\n", username);
                 connected = 0;
 
-            }else if(choice == 8)
-            {
-                // Delete the user
-                deleteUser(db, zErrMsg, rc, username, password, connected);
-
-                printf("\nYou are now disconnected\n\n");
-                printf("Goodbye %s !\n\n", username);
-                connected = 0;
-
-            }else if(choice == 9)
+            }else if(choice == '9')
             {   
                  //Freeing everything before exiting
                 while(glycemia){
@@ -200,8 +180,82 @@ int main(int argc, char **argv)
                   free(glycemia);
                   glycemia = tmp;
                 }
+        }else if (connected == 2)
+        {
+            printf("\n----------MENU ADMIN-----------:\n");
+            printf("1. Print the table users (debug)\n");
+            printf("2. See all  glycemia logs (debug)\n");
+            printf("8. Log out\n");
+            printf("9. Exit\n");
+            scanf(" %c", &choice);
+
+            if(choice == '1')
+            {
+                // Print the table users for debug only
+                printf("\n");
+                printTableUsers(db, sql, zErrMsg, rc);
+
+            }else if(choice == '2')
+            {
+                // Print the table glycemia for debug only
+                printf("\n");
+                printTableGlycemia(db, sql, zErrMsg, rc);
+
+            }else if(choice == '8')
+            {
+                printf("\nYou are now disconnected\n\n");
+                printf("Goodbye %s !\n\n", username);
+                connected = 0;
+
+            }else if(choice == '9')
+            {
+                printf("Goodbye!\n");
+                exit(0);
+
+            }
+        }else if (connected == 3)
+        {
+            printf("\n---------- Settings -----------:\n");
+            printf("1. Update your target range glycemia\n");
+            printf("2. Change the language\n");
+            printf("8. Delete your account\n");
+            printf("0. Exit Settings\n");
+            scanf(" %c", &choice);
+
+            if(choice == '1')
+            {
+                printf("\nPlease enter your targeted glycemia:\n");
+                scanf("%s", &targeted_glycemia);
+                // Update the targeted glycemia
+                updateTargetedGlycemia(db, zErrMsg, rc, username, targeted_glycemia);
+
+            }else if(choice == '2')
+            {
+                printf("\nTO DO\n");
+                // printf("\nPlease enter your language:\n");
+                // scanf("%s", &language);
+                // // Update the targeted glycemia
+                // updateLanguage(db, zErrMsg, rc, username, language);
+            }else if(choice == '8')
+            {
+                printf("\nAre you sure you want to delete your account? (y/n)\n");
+                scanf(" %c", &choice);
+                if(choice == 'y' || choice == 'Y')
+                {
+                    deleteUser(db, zErrMsg, rc, username, password, connected);
+                    printf("\nYou are now disconnected\n\n");
+                    printf("Goodbye %s !\n\n", username);
+                    connected = 0;
+                }else if(choice == 'n' || choice == 'N')
+                {
+                    printf("\n");
+                }
+            }else if(choice == '0')
+            {
+                connected = 1;
+            }
         }
-    }while(choice != 9);
+    }while(choice != '9');
 
     return 0;
 }

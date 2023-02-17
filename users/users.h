@@ -13,6 +13,8 @@ int checkUser(void *NotUsed, int argc, char **argv, char **azColName);
 
 bool LogIn(char *username, char *password, sqlite3 *db);
 
+void createAdminUser(sqlite3 *db, char *sql, char *zErrMsg, int rc);
+
 void loginUser(sqlite3 *db, char *zErrMsg, int rc, char *username, char *password, int *connected);
 
 void createUser(sqlite3 *db, char *zErrMsg, int rc, char *username, char *password, char *age, char *targeted_glycemia, int connected);

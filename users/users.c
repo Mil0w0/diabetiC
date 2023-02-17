@@ -36,10 +36,67 @@ bool LogIn(char *username, char *password, sqlite3 *db)
     }
 }
 
+// CREATE A USER TABLE IF NOT EXISTS;
+void createAdminUser(sqlite3 *db, char *sql, char *zErrMsg, int rc)
+{
+
+   char username[] = "admin";
+   int age = 99;
+   bool isAdminCreated = true;
+   char password[] = "Respons11";
+   float targeted_glycemia = 5.5;
+   sqlite3_stmt *res;
+
+   cryptPassword(password);
+
+   isAdminCreated = checkUsername(username, db, zErrMsg, rc);
+
+   if (!isAdminCreated)
+   {
+    return;
+   }
+
+   sql = "INSERT INTO USERS (USERNAME, PASSWORD, AGE, TARGETED_GLYCEMIA, CREATED_AT) VALUES (:username, :password, :age, :targeted_glycemia, CURRENT_TIMESTAMP)";
+   /* Execute SQL statement */
+   rc = sqlite3_prepare_v2(db, sql, -1, &res, 0);
+
+   if (rc == SQLITE_OK) {
+      int parameter = sqlite3_bind_parameter_index(res, ":username");
+      sqlite3_bind_text(res, parameter, username, strlen(username), NULL);
+
+      parameter =  sqlite3_bind_parameter_index(res, ":password");
+      sqlite3_bind_text(res, parameter, password, strlen(password), NULL);
+
+      parameter =  sqlite3_bind_parameter_index(res, ":age");
+      sqlite3_bind_int(res, parameter, age);
+
+      parameter =  sqlite3_bind_parameter_index(res, ":targeted_glycemia");
+      sqlite3_bind_double(res, parameter, targeted_glycemia);
+
+    } else {
+      //Error handling
+      fprintf(stderr, "Failed to execute statement: %s\n", sqlite3_errmsg(db));
+    }
+
+    rc = sqlite3_step(res);
+
+    //Error hzndling
+    if (rc != SQLITE_DONE) {
+        printf("execution failed: %s", sqlite3_errmsg(db));
+    }
+
+    //Finishes the request, returns SQLITE_OK if all good if we don't do it can lead to segfaults
+    sqlite3_finalize(res);
+}
+
 void loginUser(sqlite3 *db, char *zErrMsg, int rc, char *username, char *password, int *connected)
 {
 
+    char admin[30] = "admin";
+    char adminPassword[30] = "Respons11";
+
     cryptPassword(password);
+    cryptPassword(adminPassword);
 
     char sqlReq[200] = "SELECT * FROM USERS WHERE username = '";
     strcat(sqlReq, username);
@@ -55,9 +112,16 @@ void loginUser(sqlite3 *db, char *zErrMsg, int rc, char *username, char *passwor
         sqlite3_free(zErrMsg);
     } else
     {
+        if(strcmp(username, admin) == 0 && strcmp(password, adminPassword) == 0)
+        {
+            printf("You are now in Dev Mode !\n");
+            *connected = 2;
+        }else
+        {
         printf("You are now connected !\n");
         printf("Welcome %s ^^\n\n", username);
         *connected = 1;
+        }
     }
 }
 
@@ -66,6 +130,9 @@ void createUser(sqlite3 *db, char *zErrMsg, int rc, char *username, char *passwo
     // Check if all the fields are valid
     bool check = false;
 
+    char admin[30] = "admin\0";
+    char adminPassword[30] = "Respons11\0";
+
     check = checkValid(username, password, age, targeted_glycemia, db, zErrMsg, rc);
     if(check == false)
     {
@@ -73,6 +140,7 @@ void createUser(sqlite3 *db, char *zErrMsg, int rc, char *username, char *passwo
     }
 
     cryptPassword(password);
+    cryptPassword(adminPassword);
 
     char sqltest[200] = "INSERT INTO USERS (USERNAME, PASSWORD, AGE, TARGETED_GLYCEMIA, CREATED_AT) VALUES ('\0";
     strcat(sqltest, username);
@@ -93,10 +161,17 @@ void createUser(sqlite3 *db, char *zErrMsg, int rc, char *username, char *passwo
         sqlite3_free(zErrMsg);
     } else
     {
+        if(strcmp(username, admin) == 0 && strcmp(password, adminPassword) == 0)
+        {
+            printf("You are now in Dev Mod, don't do shit i'm watching you\n");
+            connected = 2;
+        }else
+        {
         fprintf(stdout, "User created successfully\n");
         printf("You are now connected !\n");
         printf("Welcome %s ^^\n\n", username);
         connected = 1;
+        }
     }
 }
 
