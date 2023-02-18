@@ -1,3 +1,5 @@
+#include <stdbool.h>
+
 typedef struct Entry Entry;
 struct Entry {
     Entry *next;
@@ -19,3 +21,7 @@ Entry *getGlycemiaDataFromDB(int user_id);
 void showEntries(Entry *firstEntry);
 
 void showEntriesForDate(Entry *glycemia, char *date);
+
+void showEntriesBeforeAfterDate(Entry *glycemia, char *date, int user_id, sqlite3 *db, char *zErrMsg, int rc, bool before);
+
+void showEntriesBetweenDates(Entry *glycemia, char *date, char *date2, int user_id, sqlite3 *db, char *zErrMsg, int rc);

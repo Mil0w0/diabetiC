@@ -23,6 +23,7 @@ int main(int argc, char **argv)
     char username[30];
     char password[30];
     char date[20];
+    char date2[20];
     char age[3];
     char targeted_glycemia[10];
     int user_id = 0;
@@ -120,6 +121,9 @@ int main(int argc, char **argv)
             printf("1. Add a glycemia log\n");
             printf("2. See your glycemia logs\n");
             printf("3. See your glycemia logs for a specific date\n");
+            printf("4. See your glycemia before a specific date\n");
+            printf("5. See your glycemia after a specific date\n");
+            printf("6. See your glycemia between two dates\n");
             printf("7. Settings\n");
             printf("8. Log out\n");
             printf("9. Exit\n");
@@ -154,10 +158,26 @@ int main(int argc, char **argv)
                 
             }else if(choice == '4')
             {
-                printf("\nPlease enter your targeted glycemia:\n");
-                scanf("%s", &targeted_glycemia);
-                // Update the targeted glycemia
-                updateTargetedGlycemia(db, zErrMsg, rc, username, targeted_glycemia);
+                printf("\nPlease enter the date you want to see the logs before (dd/mm/yyyy):\n");
+                scanf("%s", &date);
+                //show glycemia logs before a specific date
+                showEntriesBeforeAfterDate(glycemia, date, user_id, db, zErrMsg, rc, true);
+
+            }else if(choice == '5')
+            {
+                printf("\nPlease enter the date you want to see the logs after (dd/mm/yyyy):\n");
+                scanf("%s", &date);
+                //show glycemia logs after a specific date
+                showEntriesBeforeAfterDate(glycemia, date, user_id, db, zErrMsg, rc, false);
+
+            }else if (choice == '6')
+            {
+                printf("\nPlease enter the first date you want to see the logs between (dd/mm/yyyy):\n");
+                scanf("%s", &date);
+                printf("\nPlease enter the second date you want to see the logs between (dd/mm/yyyy):\n");
+                scanf("%s", &date2);
+                //show glycemia logs between two dates
+                showEntriesBetweenDates(glycemia, date, date2, user_id, db, zErrMsg, rc);
 
             }else if(choice == '7')
             {
