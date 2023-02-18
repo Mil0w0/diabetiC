@@ -6,6 +6,8 @@
 #include "../users/users.h"
 #include "../functions/functions.h"
 #include "glycemia.h"
+#include "../entries/entry.h"
+
 
 //text variables to be put in an env file later
 char defaultUnit[] = "Default glycemia unit is g/L.\n";
@@ -54,9 +56,19 @@ char * inputComment(){
   
 }
 
+double averageGlycemia(Entry *n){
+   double sum = 0;
+   int count = 0;
+   double average;
 
-//test code
-// int main(int argc, char **argv){
-//     double glycemia = inputsGlycemia();
-//     printf("%.2lf", glycemia);
-// }
+   while(n){
+      sum += n->value ;
+      count++;
+      n = n->next;
+   }
+   average = sum/count;
+
+   printf("Your average glycemia is %.2lf g/L for a total of %d glycemia logs.\n", average, count);
+
+   return (average < 0) ? -1 : average;
+}

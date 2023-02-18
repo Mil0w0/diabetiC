@@ -1,5 +1,5 @@
 //Compilation on linux : gcc main.c sqlite3.c -o main.exe -lpthread -ldl -lm
-//To compile : gcc main.c sqlite3.c database/database.c entries/entry.c glycemia/glycemia.c users/users.c -o main.exe
+//To compile : gcc main.c sqlite3.c database/database.c entries/entry.c glycemia/glycemia.c users/users.c functions/prettify.c -o main.exe
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -15,6 +15,7 @@
 
 int main(int argc, char **argv)
 {
+    cls();
     sqlite3 *db;
     char *zErrMsg = 0;
     int rc;
@@ -25,7 +26,7 @@ int main(int argc, char **argv)
     char password[30];
     char age[3];
     char targeted_glycemia[10];
-    int user_id = 3;
+    int user_id = 2;
     int emptyLogs = 0;
 
     //CREATE DATABASE;
@@ -86,6 +87,7 @@ int main(int argc, char **argv)
                 scanf("%s", &password);
                 printf("\n");
                 strcat(password, "\0");
+               cls();
 
                 printf("Please enter your targeted glycemia:\n");
                 scanf("%s", &targeted_glycemia);
@@ -112,10 +114,11 @@ int main(int argc, char **argv)
                 emptyLogs = 1;
             }
 
-            printf("----------MENU-----------:\n");
+            printf("\n----------MENU-----------:\n");
             printf("1. Add a glycemia log\n");
             printf("2. See your glycemia logs\n");
             printf("3. See your glycemia logs for a specific date\n");
+            printf("4. What is my average glycemia (HBA1C)\n"); //make it HBA1C if we can do before
             printf("7. Settings\n");
             printf("8. Log out\n");
             printf("9. Exit\n");
@@ -143,18 +146,24 @@ int main(int argc, char **argv)
 
                //si tout va bien on envoie à la bdd la dernière glycémie
                sendEntryToDatabase(n);
-            }else if (choice == '2'){
-                //show glycemia logs
+            }
+            else if (choice == '2')
+            {
+                //SHOW GLYCEMIA LOGS OF THE USER
                 showEntries(glycemia);
                 
-            }else if(choice == '4')
+            }
+            else if (choice == '3')
             {
-                printf("\nPlease enter your targeted glycemia:\n");
-                scanf("%s", &targeted_glycemia);
-                // Update the targeted glycemia
-                updateTargetedGlycemia(db, zErrMsg, rc, username, targeted_glycemia);
+                //SHOW GLYCEMIA LOGS OF THE USER FROM A SPECIFIC DATE
+            }
+            else if(choice == '4')
+            { double average;
+               //AVERAGE GLYCEMIA FROM USERS
+               average = averageGlycemia(glycemia);
 
-            }else if(choice == '7')
+            }
+            else if(choice == '7')
             {
                 connected = 3;   
 

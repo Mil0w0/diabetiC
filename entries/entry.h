@@ -1,3 +1,5 @@
+#pragma once
+
 typedef struct Entry Entry;
 struct Entry {
     Entry *next;
