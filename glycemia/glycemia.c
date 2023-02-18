@@ -42,7 +42,7 @@ double inputsGlycemia(){
 }
 char * inputComment(){
     int maxChars = 255;
-    char *askForComment = "Any comments ? Leave empty if none.\n";
+    char askForComment[] = "Any comments ? Leave empty if none.\n";
     printf("%s", askForComment);
 
     char *input = malloc(maxChars);
@@ -58,11 +58,11 @@ char * inputComment(){
     if (lastchar){
         *lastchar = '\0';
     }
-    printf("ok");
+
     int size = strlen(input) == 0 ? 1 : strlen(input);
     input = realloc(input,size);
     input[size] = '\0';
-    //DEBUG: printf("%s and size = %d\n", input, strlen(input));
+
     return input;
   
 }
