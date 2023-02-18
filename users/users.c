@@ -89,7 +89,39 @@ void createAdminUser(sqlite3 *db, char *sql, char *zErrMsg, int rc)
     sqlite3_finalize(res);
 }
 
-void loginUser(sqlite3 *db, char *zErrMsg, int rc, char *username, char *password, int *connected)
+int getUserID(sqlite3 *db, char *zErrMsg, int rc, char *username, char *password)
+{
+    int user_id;
+    sqlite3_stmt *res;
+
+    char *sql = "SELECT ID FROM USERS WHERE username = :username AND password = :password";
+    rc = sqlite3_prepare_v2(db, sql, -1, &res, 0);
+
+    if (rc == SQLITE_OK) {
+      int parameter = sqlite3_bind_parameter_index(res, ":username");
+      sqlite3_bind_text(res, parameter, username, strlen(username), NULL);
+      parameter =  sqlite3_bind_parameter_index(res, ":password");
+      sqlite3_bind_text(res, parameter, password, strlen(password), NULL);
+    } else {
+        fprintf(stderr, "Failed to execute statement: %s\n", sqlite3_errmsg(db));
+    }
+
+    while (rc = sqlite3_step(res) == SQLITE_ROW) 
+    {
+        user_id = sqlite3_column_int(res, 0);
+    }
+
+    sqlite3_finalize(res);
+
+    //Error hzndling
+    if (rc != SQLITE_DONE) {
+        printf("Failed to get user ID: %s", sqlite3_errmsg(db));
+    }
+
+    return user_id;
+}
+
+void loginUser(sqlite3 *db, char *zErrMsg, int rc, char *username, char *password, int *connected, int *id)
 {
 
     char admin[30] = "admin";
@@ -118,6 +150,8 @@ void loginUser(sqlite3 *db, char *zErrMsg, int rc, char *username, char *passwor
             *connected = 2;
         }else
         {
+        
+        *id = getUserID(db, zErrMsg, rc, username, password);
         printf("You are now connected !\n");
         printf("Welcome %s ^^\n\n", username);
         *connected = 1;
@@ -169,7 +203,7 @@ void createUser(sqlite3 *db, char *zErrMsg, int rc, char *username, char *passwo
         {
         fprintf(stdout, "User created successfully\n");
         printf("You are now connected !\n");
-        printf("Welcome %s ^^\n\n", username);
+        printf("Welcome %s !\n\n", username);
         connected = 1;
         }
     }
