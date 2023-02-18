@@ -119,8 +119,8 @@ int main(int argc, char **argv)
 
             printf("----------MENU-----------:\n");
             printf("1. Add a glycemia log\n");
-            printf("2. See your glycemia logs\n");
-            printf("3. See your glycemia logs a set range\n");
+            printf("2. See ALL your glycemia logs\n");
+            printf("3. Sort by date your glycemia logs\n");
             printf("7. Settings\n");
             printf("8. Log out\n");
             printf("9. Exit\n");
@@ -257,10 +257,10 @@ int main(int argc, char **argv)
         {
             Entry* glycemia = getGlycemiaDataFromDB(user_id);
             printf("\n---------- Logs from Date -----------:\n");
-            printf("1. See your glycemia logs for a specific date\n");
-            printf("2. See your glycemia before a specific date\n");
-            printf("3. See your glycemia after a specific date\n");
-            printf("4. See your glycemia between two dates\n"); 
+            printf("1. See your glycemia logs on a specific date\n");
+            printf("2. See your glycemia before a specific date \n");//excluded
+            printf("3. See your glycemia after a specific date\n"); //excluded
+            printf("4. See your glycemia between two dates\n"); //included
             printf("0. Exit Logs from Date\n");
             scanf(" %c", &choice);
             
