@@ -22,6 +22,7 @@ int main(int argc, char **argv)
     int connected = 0;
     char username[30];
     char password[30];
+    char date[20];
     char age[3];
     char targeted_glycemia[10];
     int user_id = 0;
@@ -146,8 +147,10 @@ int main(int argc, char **argv)
                 
             }else if(choice == '3')
             {
+                printf("\nPlease enter the date you want to see the logs for (dd/mm/yyyy):\n");
+                scanf("%s", &date);
                 //show glycemia logs for a specific date
-                showEntriesForDate(glycemia);
+                showEntriesForDate(glycemia, date);
                 
             }else if(choice == '4')
             {

@@ -107,7 +107,7 @@ int sendEntryToDatabase(Entry *glycemia){
 
 //return the entries 
 //we can put an second argument which would be the sql statement so we can create different request and still get the struct back
-Entry *getGlycemiaDataFromDB(unsigned int user_id){
+Entry *getGlycemiaDataFromDB(int user_id){
    int emptyLogs = 0;
    Entry *firstGlycemia = NULL;
    char *emptyLogsText = "No logs registered yet.\n";
@@ -242,3 +242,5 @@ void showEntriesForDate(Entry *glycemia, char *date) {
    }
 
 }
+
+
