@@ -1,0 +1,3 @@
+accueil;"Bienvenue"
+maVariable;"Mon texte"
+menuTest;"Choisissez une option"
