@@ -44,13 +44,16 @@ char * inputComment(){
     char *askForComment = "Any comments ? Leave empty if none.\n";
     printf("%s\n", askForComment);
 
-    char *input = malloc(maxChars); 
+    char *input = malloc(maxChars);
     fflush(stdin);
+    getchar();
     char *gettingInput = fgets(input, maxChars, stdin);
 
     if (gettingInput == NULL){
         printf("\nCouldn't get input correctly.\n");
     }
+    strchr(input, NULL);
+    printf("%s and size = %d", input, strlen(input));
 
     return input;
   
