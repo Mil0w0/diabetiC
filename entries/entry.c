@@ -244,7 +244,7 @@ void showEntriesForDate(Entry *glycemia, char *date) {
 
 }
 
-void showEntriesBeforeAfterDate(Entry *glycemia, char *date, int user_id, sqlite3 *db, char *zErrMsg, int rc, bool before) {
+void showEntriesBeforeAfterDate(char *date, int user_id, sqlite3 *db, char *zErrMsg, int rc, bool before) {
 
    sqlite3_stmt *res;
    char *sql;
@@ -283,7 +283,7 @@ void showEntriesBeforeAfterDate(Entry *glycemia, char *date, int user_id, sqlite
    
 }
 
-void showEntriesBetweenDates(Entry *glycemia, char *date, char *date2, int user_id, sqlite3 *db, char *zErrMsg, int rc) {
+void showEntriesBetweenDates(char *date, char *date2, int user_id, sqlite3 *db, char *zErrMsg, int rc) {
 
    sqlite3_stmt *res;
    

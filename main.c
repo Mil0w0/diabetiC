@@ -22,8 +22,8 @@ int main(int argc, char **argv)
     int connected = 0;
     char username[30];
     char password[30];
-    char date[20];
-    char date2[20];
+    char date[11];
+    char date2[11];
     char age[3];
     char targeted_glycemia[10];
     int user_id = 0;
