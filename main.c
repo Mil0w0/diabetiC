@@ -26,7 +26,7 @@ int main(int argc, char **argv)
     char password[30];
     char age[3];
     char targeted_glycemia[10];
-    int user_id = 2;
+    int user_id = 5;
     int emptyLogs = 0;
 
     //CREATE DATABASE;
@@ -179,6 +179,7 @@ int main(int argc, char **argv)
                 while(glycemia){
                   Entry * tmp = glycemia->next;
                   free(glycemia->comment);
+                  free(glycemia->taken_at);
                   free(glycemia);
                   glycemia = tmp;
                }
@@ -189,6 +190,7 @@ int main(int argc, char **argv)
              while(glycemia){
                   Entry * tmp = glycemia->next;
                   free(glycemia->comment);
+                  free(glycemia->taken_at);
                   free(glycemia);
                   glycemia = tmp;
                 }

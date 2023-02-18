@@ -11,34 +11,37 @@
 
 //Create a node 
 Entry *createEntry(double value, char *comment, char *date, int position, int user_id){
+    int charsInDate = 10; //because of date format we chose: dd/mm/YYYY
     Entry *glycemia = malloc(sizeof(Entry)); 
 
     glycemia->next = NULL;
     glycemia->value = value;
     glycemia->entries = position;
     glycemia->user_id = user_id;
+    glycemia->taken_at = malloc(charsInDate+1);
+
     
     if (comment != NULL) //if the user put a comment 
     {
         int size = strlen(comment);
-        glycemia->comment = malloc(size);
+        glycemia->comment = malloc(size+1);
         memcpy(glycemia->comment, comment, size);
+        glycemia->comment[size] = '\0';
     }
     if (date != NULL)
-    {
-        int size = strlen(date);
-        //printf("size date:%s\n", size);
-        glycemia->taken_at = malloc(size);
-        memcpy(glycemia->taken_at, date, size);
+    { 
+        glycemia->taken_at = strncpy(glycemia->taken_at, date, charsInDate);
+        glycemia->taken_at[charsInDate] ='\0';
     }
-    //ISSUE: overflowing strings sometimes.
 
-    return glycemia;
+   free(date);
+   free(comment);
+   
+   return glycemia;
 }
 
 //Add an entry to the diary : a chained list of nodes
 Entry *addEntry(Entry *lastEntry, double i, char *comment, char *date, int position, int user_id){
-    
     //if user add a new entry, position is calculated from the last entry
     //if we are recreating the list from the db data then position has already been calculated.
     if (position == 0){
@@ -48,7 +51,6 @@ Entry *addEntry(Entry *lastEntry, double i, char *comment, char *date, int posit
         position = (lastEntry->entries + 1) ; 
 
     }
-    //printf("last entry: %.2lf\n",i);
     lastEntry->next = createEntry(i, comment, date, position, user_id);
     //sendEntryToDatabase(lastEntry->next);
     return lastEntry->next ;
@@ -159,7 +161,6 @@ Entry *getGlycemiaDataFromDB(unsigned int user_id){
                   sqlite3_column_int(res, 0),
                   user_id
                   );
-      //printGlycemiaLog(res);
    }
 
    while (rc = sqlite3_step(res) == SQLITE_ROW) 
@@ -172,7 +173,6 @@ Entry *getGlycemiaDataFromDB(unsigned int user_id){
                0,
                user_id
                );
-      //printGlycemiaLog(res);
    }
    
    sqlite3_finalize(res);

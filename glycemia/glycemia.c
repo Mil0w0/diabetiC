@@ -58,8 +58,10 @@ char * inputComment(){
     if (lastchar){
         *lastchar = '\0';
     }
-
-    input = realloc(input,strlen(input));
+    printf("ok");
+    int size = strlen(input) == 0 ? 1 : strlen(input);
+    input = realloc(input,size);
+    input[size] = '\0';
     //DEBUG: printf("%s and size = %d\n", input, strlen(input));
     return input;
   
