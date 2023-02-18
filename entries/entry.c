@@ -7,6 +7,7 @@
 #include "../sqlite3.h"
 #include "entry.h"
 #include "../glycemia/glycemia.h"
+#include "stdbool.h"
 
 //Create a node 
 Entry *createEntry(double value, char *comment, char *date, int position, int user_id){
@@ -107,7 +108,7 @@ int sendEntryToDatabase(Entry *glycemia){
 
 //return the entries 
 //we can put an second argument which would be the sql statement so we can create different request and still get the struct back
-Entry *getGlycemiaDataFromDB(unsigned int user_id){
+Entry *getGlycemiaDataFromDB(int user_id){
    int emptyLogs = 0;
    Entry *firstGlycemia = NULL;
    char *emptyLogsText = "No logs registered yet.\n";
@@ -214,3 +215,110 @@ void showEntries(Entry *glycemia) {
    }
    
 }
+
+void showEntriesForDate(Entry *glycemia, char *date) {
+   char *emptyLogsText = "No logs registered yet.\n";
+   char *glycemiaLogsTitle = "--------All your glycemia logs--------\n";
+    
+   if (glycemia == NULL)
+   {
+      printf("%s",emptyLogsText);
+   } else 
+   {
+      printf("\n%s\n", glycemiaLogsTitle);
+   }
+   
+   while(glycemia)
+   {
+      if (strcmp(glycemia->taken_at, date) == 0)
+      {
+         printf("----ID:%d----\n", glycemia->entries);
+         printf("| Value      : %.2lf g/L\n",glycemia->value);
+         printf("| Date       : %s\n",glycemia->taken_at);
+         printf("| Comment    : %s\n",glycemia->comment);
+         printf(" ------------\n\n");
+
+      }
+      glycemia = glycemia->next;
+   }
+
+}
+
+void showEntriesBeforeAfterDate(char *date, int user_id, sqlite3 *db, char *zErrMsg, int rc, bool before) {
+
+   sqlite3_stmt *res;
+   char *sql;
+
+   if(before == true)
+   {
+      sql = "SELECT id, value, STRFTIME(\'%d/%m/%Y\', taken_at), comment FROM GLYCEMIA WHERE GLYCEMIA.user_id = :user_id AND STRFTIME(\'%d/%m/%Y\', taken_at) < :date";   
+   }else{
+      sql = "SELECT id, value, STRFTIME(\'%d/%m/%Y\', taken_at), comment FROM GLYCEMIA WHERE GLYCEMIA.user_id = :user_id AND STRFTIME(\'%d/%m/%Y\', taken_at) > :date";
+   }
+   
+   rc = sqlite3_prepare_v2(db, sql, -1, &res, 0);
+
+   if (rc == SQLITE_OK) {
+      int parameter = sqlite3_bind_parameter_index(res, ":user_id");
+      sqlite3_bind_int(res, parameter, user_id);
+
+      parameter = sqlite3_bind_parameter_index(res, ":date");
+      sqlite3_bind_text(res, parameter, date, strlen(date), NULL);
+   }
+   else
+   {
+      fprintf(stderr, "Failed to execute statement: %s\n", sqlite3_errmsg(db));
+   }
+
+   while(rc = sqlite3_step(res) == SQLITE_ROW) 
+   {
+         printf("----ID:%d----\n", sqlite3_column_int(res, 0));
+         printf("| Value      : %.2lf g/L\n", sqlite3_column_double(res, 1));
+         printf("| Date       : %s\n", sqlite3_column_text(res, 2));
+         printf("| Comment    : %s\n", sqlite3_column_text(res, 3));
+         printf(" ------------\n\n");
+   }
+   
+   sqlite3_finalize(res);
+   
+}
+
+void showEntriesBetweenDates(char *date, char *date2, int user_id, sqlite3 *db, char *zErrMsg, int rc) {
+
+   sqlite3_stmt *res;
+   
+   char *sql = "SELECT id, value, STRFTIME(\'%d/%m/%Y\', taken_at), comment FROM GLYCEMIA WHERE GLYCEMIA.user_id = :user_id AND STRFTIME(\'%d/%m/%Y\', taken_at) BETWEEN :date AND :date2";
+   
+   rc = sqlite3_prepare_v2(db, sql, -1, &res, 0);
+
+   if (rc == SQLITE_OK) {
+      int parameter = sqlite3_bind_parameter_index(res, ":user_id");
+      sqlite3_bind_int(res, parameter, user_id);
+
+      parameter = sqlite3_bind_parameter_index(res, ":date");
+      sqlite3_bind_text(res, parameter, date, strlen(date), NULL);
+
+      parameter = sqlite3_bind_parameter_index(res, ":date2");
+      sqlite3_bind_text(res, parameter, date2, strlen(date2), NULL);
+   }
+   else
+   {
+      fprintf(stderr, "Failed to execute statement: %s\n", sqlite3_errmsg(db));
+   }
+
+   while(rc = sqlite3_step(res) == SQLITE_ROW) 
+   {
+         printf("----ID:%d----\n", sqlite3_column_int(res, 0));
+         printf("| Value      : %.2lf g/L\n", sqlite3_column_double(res, 1));
+         printf("| Date       : %s\n", sqlite3_column_text(res, 2));
+         printf("| Comment    : %s\n", sqlite3_column_text(res, 3));
+         printf(" ------------\n\n");
+   }
+   
+   sqlite3_finalize(res);
+   
+}
+
+
+
+

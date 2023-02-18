@@ -22,6 +22,8 @@ int main(int argc, char **argv)
     int connected = 0;
     char username[30];
     char password[30];
+    char date[11];
+    char date2[11];
     char age[3];
     char targeted_glycemia[10];
     int user_id = 0;
@@ -84,7 +86,7 @@ int main(int argc, char **argv)
                 printf("\n");
                 strcat(age, "\0");
 
-                printf("Please enter your password (Need 1 maj [A...Z], 1 min [a...z] and 1 number [0...9]):\n");
+                printf("Please enter your password (Need 8 characters, 1 maj [A...Z], 1 min [a...z] and 1 number [0...9]):\n");
                 scanf("%s", &password);
                 printf("\n");
                 strcat(password, "\0");
@@ -117,8 +119,8 @@ int main(int argc, char **argv)
 
             printf("----------MENU-----------:\n");
             printf("1. Add a glycemia log\n");
-            printf("2. See your glycemia logs\n");
-            printf("3. See your glycemia logs for a specific date\n");
+            printf("2. See ALL your glycemia logs\n");
+            printf("3. Sort by date your glycemia logs\n");
             printf("7. Settings\n");
             printf("8. Log out\n");
             printf("9. Exit\n");
@@ -144,12 +146,9 @@ int main(int argc, char **argv)
                 //show glycemia logs
                 showEntries(glycemia);
                 
-            }else if(choice == '4')
+            }else if(choice == '3')
             {
-                printf("\nPlease enter your targeted glycemia:\n");
-                scanf("%s", &targeted_glycemia);
-                // Update the targeted glycemia
-                updateTargetedGlycemia(db, zErrMsg, rc, username, targeted_glycemia);
+                connected = 4;
 
             }else if(choice == '7')
             {
@@ -254,6 +253,52 @@ int main(int argc, char **argv)
             {
                 connected = 1;
             }
+        }else if(connected == 4)
+        {
+            Entry* glycemia = getGlycemiaDataFromDB(user_id);
+            printf("\n---------- Logs from Date -----------:\n");
+            printf("1. See your glycemia logs on a specific date\n");
+            printf("2. See your glycemia before a specific date \n");//excluded
+            printf("3. See your glycemia after a specific date\n"); //excluded
+            printf("4. See your glycemia between two dates\n"); //included
+            printf("0. Exit Logs from Date\n");
+            scanf(" %c", &choice);
+            
+            if(choice == '1')
+            {
+                printf("\nPlease enter the date you want to see the logs for (dd/mm/yyyy):\n");
+                scanf("%s", &date);
+                //show glycemia logs for a specific date
+                showEntriesForDate(glycemia, date);
+                
+            }else if(choice == '2')
+            {
+                printf("\nPlease enter the date you want to see the logs before (dd/mm/yyyy):\n");
+                scanf("%s", &date);
+                //show glycemia logs before a specific date
+                showEntriesBeforeAfterDate(glycemia, date, user_id, db, zErrMsg, rc, true);
+
+            }else if(choice == '3')
+            {
+                printf("\nPlease enter the date you want to see the logs after (dd/mm/yyyy):\n");
+                scanf("%s", &date);
+                //show glycemia logs after a specific date
+                showEntriesBeforeAfterDate(glycemia, date, user_id, db, zErrMsg, rc, false);
+
+            }else if (choice == '4')
+            {
+                printf("\nPlease enter the first date you want to see the logs between (dd/mm/yyyy):\n");
+                scanf("%s", &date);
+                printf("\nPlease enter the second date you want to see the logs between (dd/mm/yyyy):\n");
+                scanf("%s", &date2);
+                //show glycemia logs between two dates
+                showEntriesBetweenDates(glycemia, date, date2, user_id, db, zErrMsg, rc);
+
+            }else if (choice == '0')
+            {
+                connected = 1;
+            }
+
         }
     }while(choice != '9');
 
