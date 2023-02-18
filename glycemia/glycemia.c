@@ -26,6 +26,7 @@ double inputsGlycemia(){
         printf("%s", askForGlycemia);
         scanf("%s", &tempGlycemia);
         strcat(tempGlycemia, "\0");
+        getchar(); //Otherwise there's a \n in the buffer.
 
         //Verification and convert input to double
         if (!checkGlycemia(tempGlycemia)){
@@ -42,19 +43,24 @@ double inputsGlycemia(){
 char * inputComment(){
     int maxChars = 255;
     char *askForComment = "Any comments ? Leave empty if none.\n";
-    printf("%s\n", askForComment);
+    printf("%s", askForComment);
 
     char *input = malloc(maxChars);
-    fflush(stdin);
-    getchar();
+
     char *gettingInput = fgets(input, maxChars, stdin);
 
     if (gettingInput == NULL){
         printf("\nCouldn't get input correctly.\n");
     }
-    strchr(input, NULL);
-    printf("%s and size = %d", input, strlen(input));
 
+    //When there's \n at the end of string we remove it.
+    char *lastchar = strrchr(input,'\n');
+    if (lastchar){
+        *lastchar = '\0';
+    }
+
+    input = realloc(input,strlen(input));
+    //DEBUG: printf("%s and size = %d\n", input, strlen(input));
     return input;
   
 }
