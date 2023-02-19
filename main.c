@@ -24,6 +24,8 @@ int main(int argc, char **argv)
     int connected = 0;
     char username[30];
     char password[30];
+    char *usernameConfig;
+    char *passwordConfig;
     char date[11];
     char date2[11];
     char age[3];
@@ -31,7 +33,14 @@ int main(int argc, char **argv)
     int user_id = 0;
     int emptyLogs = 0;
 
-    readFile("config.txt");
+    Config *config = readFile("config.txt");
+
+    strcpy(username, config->username);
+    strcpy(password, config->password);
+
+    free(config);
+
+    loginUser(db, zErrMsg, rc, username, password, &connected, &user_id);
 
     //CREATE DATABASE;
     rc = sqlite3_open("database/diabetic.db", &db);
