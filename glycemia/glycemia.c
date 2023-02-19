@@ -82,7 +82,7 @@ double averageGlycemia(Entry *n){
    }
    average = sum/count;
 
-   printf("Your average glycemia is %.2lf g/L for a total of %d glycemia logs.\n", average, count);
+   printf("Your average glycemia is %.2lf g/L for a total of %d glycemia logs.\n\n", average, count);
 
    return (average < 0) ? -1 : average;
 }

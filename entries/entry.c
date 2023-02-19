@@ -36,8 +36,8 @@ Entry *createEntry(double value, char *comment, char *date, int position, int us
         glycemia->taken_at[charsInDate] ='\0';
     }
 
-   free(date);
-   free(comment);
+   //free(date);
+   //free(comment);
    
    return glycemia;
 }
@@ -63,7 +63,7 @@ Entry *addEntry(Entry *lastEntry, double i, char *comment, char *date, int posit
 //send the entry to be kept in database
 int sendEntryToDatabase(Entry *glycemia){
 
-   char successfullySaved[] = "\nYour glycemia has been saved into the database.\n";
+   char successfullySaved[] = "\nYour glycemia has been saved into the database.\n\n";
 
    sqlite3 *db;
    char *err_msg = 0;

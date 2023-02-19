@@ -1,4 +1,5 @@
 #include "users.h"
+#include "../functions/functions.h"
 
 void printok()
 {
@@ -147,6 +148,7 @@ void loginUser(sqlite3 *db, char *zErrMsg, int rc, char *username, char *passwor
         {
         
         *id = getUserID(db, zErrMsg, rc, username, password);
+        cls();
         printf("You are now connected !\n");
         printf("Welcome %s !\n\n", username);
         *connected = 1;

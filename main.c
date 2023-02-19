@@ -53,7 +53,7 @@ int main(int argc, char **argv)
     {
         // Case 1: User is not connected
         if(connected == 0)
-        {
+        {   cls();
             printf("Welcome to your glycemia database, please choose an option:\n");
             printf("1. Log in with your user\n");
             printf("2. Create a new user\n");
@@ -62,6 +62,7 @@ int main(int argc, char **argv)
 
             if(choice == '1')
             {
+                cls();
                 printf("\nPlease enter your username:\n");
                 scanf("%s", &username);
                 strcat(username, "\0");
@@ -70,7 +71,6 @@ int main(int argc, char **argv)
                 printf("Please enter your password:\n");
                 scanf("%s", &password);
                 strcat(password, "\0");
-                cls();
 
                 // Check if the user exists and if the password is correct then connect the user
                 loginUser(db, zErrMsg, rc, username, password, &connected, &user_id);
@@ -119,7 +119,7 @@ int main(int argc, char **argv)
                 emptyLogs = 1;
             }
 
-            printf("\n----------MENU-----------:\n");
+            printf("----------MENU-----------:\n");
             printf("1. Add a glycemia log\n");
             printf("2. See ALL your glycemia logs\n");
             printf("3. Sort by date your glycemia logs\n");
@@ -133,6 +133,7 @@ int main(int argc, char **argv)
             {       
                 double glycemiaValue = inputsGlycemia();
                 char *commentValue = inputComment();
+                cls();
 
                 if (!glycemiaValue){
                     printf("ERROR");
@@ -142,7 +143,7 @@ int main(int argc, char **argv)
                {
                 glycemia = createEntry(glycemiaValue,commentValue, NULL, 1, user_id);
                 n = malloc(sizeof(Entry)); 
-                n = glycemia; //besoin de malloc ou pas?
+                n = glycemia;
                 } 
                 else 
                {
@@ -172,6 +173,7 @@ int main(int argc, char **argv)
 
             }else if(choice == '8')
             {
+                cls();
                 printf("\nYou are now disconnected\n\n");
                 printf("Goodbye %s !\n\n", username);
                 connected = 0;
@@ -220,12 +222,14 @@ int main(int argc, char **argv)
 
             }else if(choice == '8')
             {
+                cls();
                 printf("\nYou are now disconnected\n\n");
                 printf("Goodbye %s !\n\n", username);
                 connected = 0;
 
             }else if(choice == '9')
             {
+                cls();
                 printf("Goodbye!\n");
                 exit(0);
 
