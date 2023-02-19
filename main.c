@@ -1,6 +1,6 @@
-//Compilation on linux : gcc main.c sqlite3.c -o main.exe -lpthread -ldl -lm
 //To compile : gcc main.c sqlite3.c database/database.c entries/entry.c glycemia/glycemia.c users/users.c functions/prettify.c config/config.c -o main.exe
 // gcc *.c */*.c -o main.exe
+//Compilation on linux : might need to add -lpthread -ldl -lm
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
@@ -340,7 +340,6 @@ int main(int argc, char **argv)
             }
 
         }
-        // cls();
     }while(choice != '9');
 
     return 0;

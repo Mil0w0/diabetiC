@@ -9,6 +9,7 @@ void welcomeTodiabetiC()
 {
     printf("                        ##########################\n");
     printf("                        ##       diabetiC       ##\n");
-    printf("                        ##########################\n");
+    printf("                        ##########################\n\n\n");
+
 
 }

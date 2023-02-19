@@ -32,6 +32,8 @@ double inputsGlycemia(char unit[], int user_id, sqlite3 *db){
    double irrealMax = 30;
    int theUnit = whichUnit(unit);
 
+    cls();
+
     switch (theUnit) {
         case 0:
             defaultUnit = strcpy(defaultUnit,"Default glycemia unit is g/L.\n");
