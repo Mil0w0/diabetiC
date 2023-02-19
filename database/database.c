@@ -42,6 +42,8 @@ void createTableUsers(sqlite3 *db, char *sql, char *zErrMsg, int rc)
             "AGE               INTEGER     NOT NULL," \
             "PASSWORD          VARCHAR(30)," \
             "TARGETED_GLYCEMIA FLOAT     NOT NULL," \
+            "HYPERGLYCEMIA     INTERGER     NOT NULL," \
+            "HYPOGLYCEMIA      INTEGER     NOT NULL," \
             "CREATED_AT        DATETIME);";
 
    /* Execute SQL statement */

@@ -57,7 +57,7 @@ void createAdminUser(sqlite3 *db, char *sql, char *zErrMsg, int rc)
     return;
    }
 
-   sql = "INSERT INTO USERS (USERNAME, PASSWORD, AGE, TARGETED_GLYCEMIA, CREATED_AT) VALUES (:username, :password, :age, :targeted_glycemia, CURRENT_TIMESTAMP)";
+   sql = "INSERT INTO USERS (USERNAME, PASSWORD, AGE, TARGETED_GLYCEMIA, CREATED_AT, HYPERGLYCEMIA, HYPOGLYCEMIA) VALUES (:username, :password, :age, :targeted_glycemia, CURRENT_TIMESTAMP, 0, 0)";
    /* Execute SQL statement */
    rc = sqlite3_prepare_v2(db, sql, -1, &res, 0);
 
@@ -117,7 +117,7 @@ int getUserID(sqlite3 *db, char *zErrMsg, int rc, char *username, char *password
     return user_id;
 }
 
-void loginUser(sqlite3 *db, char *zErrMsg, int rc, char *username, char *password, int *connected, int *id)
+void loginUser(sqlite3 *db, char *zErrMsg, int rc, char *username, char *password, int *connected, int *id, bool isConfig)
 {
     char admin[30] = "admin";
     char adminPassword[30] = "Respons11";
@@ -133,10 +133,15 @@ void loginUser(sqlite3 *db, char *zErrMsg, int rc, char *username, char *passwor
 
     rc = sqlite3_exec(db, sqlReq, checkUser, 0, &zErrMsg);
 
+    cls();
+
     if( rc == SQLITE_OK )
     {
-        printf("Wrong username or password, please try again\n\n");
-        sqlite3_free(zErrMsg);
+        if(isConfig == false)
+        {
+            printf("Wrong username or password, please try again\n\n");
+            sqlite3_free(zErrMsg);
+        }
     } else
     {
         if(strcmp(username, admin) == 0 && strcmp(password, adminPassword) == 0)
@@ -172,7 +177,7 @@ void createUser(sqlite3 *db, char *zErrMsg, int rc, char *username, char *passwo
     cryptPassword(password);
     cryptPassword(adminPassword);
 
-    char sqltest[200] = "INSERT INTO USERS (USERNAME, PASSWORD, AGE, TARGETED_GLYCEMIA, CREATED_AT) VALUES ('\0";
+    char sqltest[200] = "INSERT INTO USERS (USERNAME, PASSWORD, AGE, TARGETED_GLYCEMIA, CREATED_AT, HYPERGLYCEMIA, HYPOGLYCEMIA) VALUES ('\0";
     strcat(sqltest, username);
     strcat(sqltest, "', '");
     strcat(sqltest, password);
@@ -181,7 +186,7 @@ void createUser(sqlite3 *db, char *zErrMsg, int rc, char *username, char *passwo
     strcat(sqltest, "', '");
     strcat(sqltest, targeted_glycemia);
     strcat(sqltest, "', ");
-    strcat(sqltest, "CURRENT_TIMESTAMP);");
+    strcat(sqltest, "CURRENT_TIMESTAMP, 0, 0)");
 
     rc = sqlite3_exec(db, sqltest, callback, 0, &zErrMsg);
 
@@ -404,4 +409,93 @@ void decryptPassword(char *password)
     {
         password[i] = password[i] - 8;
     }
+}
+
+void addHyperToUser(sqlite3 *db, int user_id)
+{
+    char *zErrMsg = 0;
+    int rc;
+    sqlite3_stmt *res;
+
+    char sql[200] = "UPDATE USERS SET HYPERGLYCEMIA = HYPERGLYCEMIA + 1 WHERE ID = :user_id";
+
+    rc = sqlite3_prepare_v2(db, sql, -1, &res, 0);
+
+   if (rc == SQLITE_OK) {
+      int parameter = sqlite3_bind_parameter_index(res, ":user_id");
+      sqlite3_bind_int(res, parameter, user_id);
+   }
+   else
+   {
+      fprintf(stderr, "Failed to execute statement: %s\n", sqlite3_errmsg(db));
+   }
+
+   rc = sqlite3_step(res);
+
+   //Error handling
+   if (rc != SQLITE_DONE) {
+      printf("execution failed: %s", sqlite3_errmsg(db));
+   }
+
+   //Finishes the request, returns SQLITE_OK if all good if we don't do it can lead to segfaults
+   sqlite3_finalize(res);
+}
+
+void addHypoToUser(sqlite3 *db, int user_id)
+{
+    char *zErrMsg = 0;
+    int rc;
+    sqlite3_stmt *res;
+
+    char sql[200] = "UPDATE USERS SET HYPOGLYCEMIA = HYPOGLYCEMIA + 1 WHERE ID = :user_id";
+
+    rc = sqlite3_prepare_v2(db, sql, -1, &res, 0);
+
+   if (rc == SQLITE_OK) {
+      int parameter = sqlite3_bind_parameter_index(res, ":user_id");
+      sqlite3_bind_int(res, parameter, user_id);
+   }
+   else
+   {
+      fprintf(stderr, "Failed to execute statement: %s\n", sqlite3_errmsg(db));
+   }
+
+   rc = sqlite3_step(res);
+
+   //Error handling
+   if (rc != SQLITE_DONE) {
+      printf("execution failed: %s", sqlite3_errmsg(db));
+   }
+
+   //Finishes the request, returns SQLITE_OK if all good if we don't do it can lead to segfaults
+   sqlite3_finalize(res);
+}
+
+void showHypoHyper(sqlite3 *db, int user_id)
+{
+    char *zErrMsg = 0;
+    int rc;
+    sqlite3_stmt *res;
+
+    char sql[200] = "SELECT HYPOGLYCEMIA, HYPERGLYCEMIA FROM USERS WHERE ID = :user_id";
+
+    rc = sqlite3_prepare_v2(db, sql, -1, &res, 0);
+
+   if (rc == SQLITE_OK) {
+      int parameter = sqlite3_bind_parameter_index(res, ":user_id");
+      sqlite3_bind_int(res, parameter, user_id);
+   }
+   else
+   {
+      fprintf(stderr, "Failed to execute statement: %s\n", sqlite3_errmsg(db));
+    }
+
+    rc = sqlite3_step(res);
+
+    if (rc == SQLITE_ROW) {
+        printf("Your number of hypoglycemias: %d\n", sqlite3_column_int(res, 0));
+        printf("Your number of hyperglycemias: %d\n\n", sqlite3_column_int(res, 1));
+    }
+
+    sqlite3_finalize(res);
 }
