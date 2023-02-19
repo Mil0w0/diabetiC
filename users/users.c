@@ -36,11 +36,96 @@ bool LogIn(char *username, char *password, sqlite3 *db)
     }
 }
 
-void loginUser(sqlite3 *db, char *zErrMsg, int rc, char *username, char *password, int *connected)
+// CREATE A USER TABLE IF NOT EXISTS;
+void createAdminUser(sqlite3 *db, char *sql, char *zErrMsg, int rc)
 {
 
-    char admin[30] = "admin\0";
-    char adminPassword[30] = "Respons11\0";
+   char username[] = "admin";
+   int age = 99;
+   bool isAdminCreated = true;
+   char password[] = "Respons11";
+   float targeted_glycemia = 5.5;
+   sqlite3_stmt *res;
+
+   cryptPassword(password);
+
+   isAdminCreated = checkUsername(username, db, zErrMsg, rc);
+
+   if (!isAdminCreated)
+   {
+    return;
+   }
+
+   sql = "INSERT INTO USERS (USERNAME, PASSWORD, AGE, TARGETED_GLYCEMIA, CREATED_AT) VALUES (:username, :password, :age, :targeted_glycemia, CURRENT_TIMESTAMP)";
+   /* Execute SQL statement */
+   rc = sqlite3_prepare_v2(db, sql, -1, &res, 0);
+
+   if (rc == SQLITE_OK) {
+      int parameter = sqlite3_bind_parameter_index(res, ":username");
+      sqlite3_bind_text(res, parameter, username, strlen(username), NULL);
+
+      parameter =  sqlite3_bind_parameter_index(res, ":password");
+      sqlite3_bind_text(res, parameter, password, strlen(password), NULL);
+
+      parameter =  sqlite3_bind_parameter_index(res, ":age");
+      sqlite3_bind_int(res, parameter, age);
+
+      parameter =  sqlite3_bind_parameter_index(res, ":targeted_glycemia");
+      sqlite3_bind_double(res, parameter, targeted_glycemia);
+
+    } else {
+      //Error handling
+      fprintf(stderr, "Failed to execute statement: %s\n", sqlite3_errmsg(db));
+    }
+
+    rc = sqlite3_step(res);
+
+    //Error hzndling
+    if (rc != SQLITE_DONE) {
+        printf("execution failed: %s", sqlite3_errmsg(db));
+    }
+
+    //Finishes the request, returns SQLITE_OK if all good if we don't do it can lead to segfaults
+    sqlite3_finalize(res);
+}
+
+int getUserID(sqlite3 *db, char *zErrMsg, int rc, char *username, char *password)
+{
+    int user_id;
+    sqlite3_stmt *res;
+
+    char *sql = "SELECT ID FROM USERS WHERE username = :username AND password = :password";
+    rc = sqlite3_prepare_v2(db, sql, -1, &res, 0);
+
+    if (rc == SQLITE_OK) {
+      int parameter = sqlite3_bind_parameter_index(res, ":username");
+      sqlite3_bind_text(res, parameter, username, strlen(username), NULL);
+      parameter =  sqlite3_bind_parameter_index(res, ":password");
+      sqlite3_bind_text(res, parameter, password, strlen(password), NULL);
+    } else {
+        fprintf(stderr, "Failed to execute statement: %s\n", sqlite3_errmsg(db));
+    }
+
+    while (rc = sqlite3_step(res) == SQLITE_ROW) 
+    {
+        user_id = sqlite3_column_int(res, 0);
+    }
+
+    sqlite3_finalize(res);
+
+    //Error hzndling
+    if (rc != SQLITE_DONE) {
+        printf("Failed to get user ID: %s", sqlite3_errmsg(db));
+    }
+
+    return user_id;
+}
+
+void loginUser(sqlite3 *db, char *zErrMsg, int rc, char *username, char *password, int *connected, int *id)
+{
+
+    char admin[30] = "admin";
+    char adminPassword[30] = "Respons11";
 
     cryptPassword(password);
     cryptPassword(adminPassword);
@@ -61,12 +146,14 @@ void loginUser(sqlite3 *db, char *zErrMsg, int rc, char *username, char *passwor
     {
         if(strcmp(username, admin) == 0 && strcmp(password, adminPassword) == 0)
         {
-            printf("You are now in Dev Mod, don't do shit i'm watching you\n");
+            printf("You are now in Dev Mode !\n");
             *connected = 2;
         }else
         {
+        
+        *id = getUserID(db, zErrMsg, rc, username, password);
         printf("You are now connected !\n");
-        printf("Welcome %s ^^\n\n", username);
+        printf("Welcome %s !\n\n", username);
         *connected = 1;
         }
     }
@@ -116,7 +203,7 @@ void createUser(sqlite3 *db, char *zErrMsg, int rc, char *username, char *passwo
         {
         fprintf(stdout, "User created successfully\n");
         printf("You are now connected !\n");
-        printf("Welcome %s ^^\n\n", username);
+        printf("Welcome %s !\n\n", username);
         connected = 1;
         }
     }

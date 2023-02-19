@@ -24,9 +24,11 @@ int main(int argc, char **argv)
     int connected = 0;
     char username[30];
     char password[30];
+    char date[11];
+    char date2[11];
     char age[3];
     char targeted_glycemia[10];
-    int user_id = 5;
+    int user_id = 0;
     int emptyLogs = 0;
 
     //CREATE DATABASE;
@@ -43,6 +45,9 @@ int main(int argc, char **argv)
 
     // Create the table users
     createTableUsers(db, sql, zErrMsg, rc);
+
+    // Create the admin user
+    createAdminUser(db, sql, zErrMsg, rc);
 
     do 
     {
@@ -68,7 +73,7 @@ int main(int argc, char **argv)
                 cls();
 
                 // Check if the user exists and if the password is correct then connect the user
-                loginUser(db, zErrMsg, rc, username, password, &connected);
+                loginUser(db, zErrMsg, rc, username, password, &connected, &user_id);
 
             }else if(choice == '2')
             {
@@ -83,7 +88,7 @@ int main(int argc, char **argv)
                 printf("\n");
                 strcat(age, "\0");
 
-                printf("Please enter your password (Need 1 maj [A...Z], 1 min [a...z] and 1 number [0...9]):\n");
+                printf("Please enter your password (Need 8 characters, 1 maj [A...Z], 1 min [a...z] and 1 number [0...9]):\n");
                 scanf("%s", &password);
                 printf("\n");
                 strcat(password, "\0");
@@ -116,8 +121,8 @@ int main(int argc, char **argv)
 
             printf("\n----------MENU-----------:\n");
             printf("1. Add a glycemia log\n");
-            printf("2. See your glycemia logs\n");
-            printf("3. See your glycemia logs for a specific date\n");
+            printf("2. See ALL your glycemia logs\n");
+            printf("3. Sort by date your glycemia logs\n");
             printf("4. What is my average glycemia (HBA1C)\n"); //make it HBA1C if we can do before
             printf("7. Settings\n");
             printf("8. Log out\n");
@@ -151,17 +156,15 @@ int main(int argc, char **argv)
             {
                 //SHOW GLYCEMIA LOGS OF THE USER
                 showEntries(glycemia);
-                
-            }
-            else if (choice == '3')
-            {
-                //SHOW GLYCEMIA LOGS OF THE USER FROM A SPECIFIC DATE
-            }
+            }    
             else if(choice == '4')
-            { double average;
-               //AVERAGE GLYCEMIA FROM USERS
-               average = averageGlycemia(glycemia);
-
+            {   //AVERAGE GLYCEMIA FROM USERS
+                double average;
+                average = averageGlycemia(glycemia);
+            }
+            else if(choice == '3')
+            {
+                connected = 4;
             }
             else if(choice == '7')
             {
@@ -175,14 +178,14 @@ int main(int argc, char **argv)
 
             }else if(choice == '9')
             {   
-                 //Freeing everything before exiting
+                //Freeing everything before exiting
                 while(glycemia){
-                  Entry * tmp = glycemia->next;
-                  free(glycemia->comment);
-                  free(glycemia->taken_at);
-                  free(glycemia);
-                  glycemia = tmp;
-               }
+                    Entry * tmp = glycemia->next;
+                    free(glycemia->comment);
+                    free(glycemia->taken_at);
+                    free(glycemia);
+                    glycemia = tmp;
+                }
                 printf("Goodbye!\n");
                 sqlite3_close(db);
                 exit(0);
@@ -254,13 +257,13 @@ int main(int argc, char **argv)
             {
                 printf("\nAre you sure you want to delete your account? (y/n)\n");
                 scanf(" %c", &choice);
-                if(choice == 'y')
+                if(choice == 'y' || choice == 'Y')
                 {
                     deleteUser(db, zErrMsg, rc, username, password, connected);
                     printf("\nYou are now disconnected\n\n");
                     printf("Goodbye %s !\n\n", username);
                     connected = 0;
-                }else if(choice == 'n')
+                }else if(choice == 'n' || choice == 'N')
                 {
                     printf("\n");
                 }
@@ -268,6 +271,52 @@ int main(int argc, char **argv)
             {
                 connected = 1;
             }
+        }else if(connected == 4)
+        {
+            Entry* glycemia = getGlycemiaDataFromDB(user_id);
+            printf("\n---------- Logs from Date -----------:\n");
+            printf("1. See your glycemia logs on a specific date\n");
+            printf("2. See your glycemia before a specific date \n");//excluded
+            printf("3. See your glycemia after a specific date\n"); //excluded
+            printf("4. See your glycemia between two dates\n"); //included
+            printf("0. Exit Logs from Date\n");
+            scanf(" %c", &choice);
+            
+            if(choice == '1')
+            {
+                printf("\nPlease enter the date you want to see the logs for (dd/mm/yyyy):\n");
+                scanf("%s", &date);
+                //show glycemia logs for a specific date
+                showEntriesForDate(glycemia, date);
+                
+            }else if(choice == '2')
+            {
+                printf("\nPlease enter the date you want to see the logs before (dd/mm/yyyy):\n");
+                scanf("%s", &date);
+                //show glycemia logs before a specific date
+                showEntriesBeforeAfterDate(date, user_id, db, zErrMsg, rc, true);
+
+            }else if(choice == '3')
+            {
+                printf("\nPlease enter the date you want to see the logs after (dd/mm/yyyy):\n");
+                scanf("%s", &date);
+                //show glycemia logs after a specific date
+                showEntriesBeforeAfterDate(date, user_id, db, zErrMsg, rc, false);
+
+            }else if (choice == '4')
+            {
+                printf("\nPlease enter the first date you want to see the logs between (dd/mm/yyyy):\n");
+                scanf("%s", &date);
+                printf("\nPlease enter the second date you want to see the logs between (dd/mm/yyyy):\n");
+                scanf("%s", &date2);
+                //show glycemia logs between two dates
+                showEntriesBetweenDates(date, date2, user_id, db, zErrMsg, rc);
+
+            }else if (choice == '0')
+            {
+                connected = 1;
+            }
+
         }
     }while(choice != '9');
 
