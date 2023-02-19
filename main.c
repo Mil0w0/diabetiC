@@ -51,7 +51,6 @@ int main(int argc, char **argv)
     createAdminUser(db, sql, zErrMsg, rc);
 
     cls();
-    welcomeTodiabetiC();
 
     Config *config = readFile("config/config.txt");
 
@@ -65,6 +64,8 @@ int main(int argc, char **argv)
     free(config);
 
     loginUser(db, zErrMsg, rc, username, password, &connected, &user_id, true);
+
+    welcomeTodiabetiC();
 
     do 
     {
