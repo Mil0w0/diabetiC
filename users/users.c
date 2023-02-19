@@ -508,7 +508,7 @@ void updatePassword(sqlite3 *db,int user_id) {
     bool condition = false;
     char * newPassword = malloc(sizeof(char*)*255);
     char * repeatPassword = malloc(sizeof(char*)*255);
-    do {   
+
         while (check1==0)
         {
     printf("Enter your new password : ");
@@ -521,27 +521,28 @@ void updatePassword(sqlite3 *db,int user_id) {
                 check1 = 1;
             }
         }
-        
+    while (check2==0)
+    {
     printf("\nEnter your new password again :\n");
     scanf("%s",repeatPassword);
     cls();
     if (strcmp(newPassword,repeatPassword)!=0) {
             printf("Passwords do not match.\n");
         } else {
-            condition==true;
+            check2 = 1;
         }
-        
-    } while (condition==false || check==false);
+        }
     
     free(repeatPassword);
     
     cryptPassword(newPassword);
         // Req entière : char sqlPwd[] = "UPDATE USER SET User.password = password WHERE User.user_id = user_id";
         char sqlPwd[] = "UPDATE USER SET User.password = ";
-    printf("Après la sql pwd[]");
         strcat(sqlPwd,newPassword);
-        strcat(sqlPwd," WHERE User.user_id = ");
+    printf("APRES password");
+    strcat(sqlPwd," WHERE User.ID = ");
         strcat(sqlPwd,user_id);
+    printf("\nAPRES USER.ID");
         strcat(sqlPwd,";");
     printf("Avant le updateTable");
     updateTable(db,sqlPwd);
