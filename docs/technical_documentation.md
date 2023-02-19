@@ -131,7 +131,26 @@ II. EN MODE DEBUG
     Avec cet utilisateur, il est possible d'afficher les données de toute la table USERS et GLYCEMIA. 
     On peut imaginer qu'il est possible de supprimer un autre utilisateur depuis ce menu également.
 
-## Synthèse des membres de l’équipe & répartition des tâches
-● Loriane : Travaux sur les listes chaînées avec les glycémies, envoi des données liées à la glycémie à la bdd avec des paramètres, rédaction documentations, git owner.
+## Synthèse des membres de l’équipe && répartition des tâches
+● Loriane : 
+
+    * Travaux sur les listes chaînées avec les glycémies 
+    * Envoi des données liées à la glycémie à la bdd avec des paramètres
+    * Rédaction des documentations, git owner.
+
+    La liberté du sujet nous a permis de réaliser une petite application fonctionnelle dans la limite de nos capacités. 
+    Elle est d'utilité publique et bien qu'il existe déjà des applications mobiles pour ce sujet, je me dis que quelqu'un pourra bien l'utiliser.
+    
+    Globalement, le développement de l'application a bien avancé mais a été entamé trop tard pour certaines fonctionnalités ce qui est dommage.
+    Cependant diabetiC respecte les 4 grands critères évalués :
+        * système de persistence des données : SQLITE
+        * fichier de config au démarrage de l'appli : config.txt
+        * des listes chainées : struct Entry
+        * une librairie externe : sqlite3.h
+
+    Petite pensée à Harry, el gato, cette app est pour toi.
+
+    
 ● Marjorie :
+
 ● Nino :
