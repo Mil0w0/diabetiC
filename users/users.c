@@ -501,31 +501,36 @@ void showHypoHyper(sqlite3 *db, int user_id)
 
 }
 
-void updatePassword(sqlite3 *db,int *user_id) {
+void updatePassword(sqlite3 *db,int user_id) {
     bool check = false;
+    int check1 = 0;
+    int check2 = 0;
     bool condition = false;
     char * newPassword = malloc(sizeof(char*)*255);
     char * repeatPassword = malloc(sizeof(char*)*255);
     do {   
+        while (check1==0)
+        {
     printf("Enter your new password : ");
     scanf("%s",newPassword);
     cls();
+            check = checkPassword(newPassword);
+            if (check==false) {
+                printf("Password must contain at least 8 characters, 1 number and 1 uppercase\n");
+            } else {
+                check1 = 1;
+            }
+        }
+        
     printf("\nEnter your new password again :\n");
     scanf("%s",repeatPassword);
     cls();
     if (strcmp(newPassword,repeatPassword)!=0) {
-            printf("Password do not match. TEST STRING\n");
+            printf("Passwords do not match.\n");
         } else {
             condition==true;
         }
-        check = checkPassword(newPassword);
-        printf(check);
-        printf(condition);
-    if (check==false) {
-            printf("Password must contain at least 8 characters, 1 number and 1 uppercase TST STRING\n");
-        } else {
-            check == true;
-        }
+        
     } while (condition==false || check==false);
     
     free(repeatPassword);
@@ -533,16 +538,18 @@ void updatePassword(sqlite3 *db,int *user_id) {
     cryptPassword(newPassword);
         // Req entière : char sqlPwd[] = "UPDATE USER SET User.password = password WHERE User.user_id = user_id";
         char sqlPwd[] = "UPDATE USER SET User.password = ";
+    printf("Après la sql pwd[]");
         strcat(sqlPwd,newPassword);
         strcat(sqlPwd," WHERE User.user_id = ");
         strcat(sqlPwd,user_id);
         strcat(sqlPwd,";");
+    printf("Avant le updateTable");
     updateTable(db,sqlPwd);
 
     free(newPassword);
 }
 
-void updateTable(sqlite3 *db,char *sql) {
+int updateTable(sqlite3 *db,char *sql) {
     
     char *zErrMsg = 0;
     int rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg);
