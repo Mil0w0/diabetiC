@@ -1,5 +1,5 @@
 //Compilation on linux : gcc main.c sqlite3.c -o main.exe -lpthread -ldl -lm
-//To compile : gcc main.c sqlite3.c database/database.c entries/entry.c glycemia/glycemia.c users/users.c -o main.exe
+//To compile : gcc main.c sqlite3.c database/database.c entries/entry.c glycemia/glycemia.c users/users.c functions/prettify.c -o main.exe
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -11,9 +11,11 @@
 #include "database/database.h"
 #include "entries/entry.h"
 #include "glycemia/glycemia.h"
+#include "functions/functions.h"
 
 int main(int argc, char **argv)
 {
+    cls();
     sqlite3 *db;
     char *zErrMsg = 0;
     int rc;
@@ -68,7 +70,7 @@ int main(int argc, char **argv)
                 printf("Please enter your password:\n");
                 scanf("%s", &password);
                 strcat(password, "\0");
-                printf("\n");
+                cls();
 
                 // Check if the user exists and if the password is correct then connect the user
                 loginUser(db, zErrMsg, rc, username, password, &connected, &user_id);
@@ -90,6 +92,7 @@ int main(int argc, char **argv)
                 scanf("%s", &password);
                 printf("\n");
                 strcat(password, "\0");
+               cls();
 
                 printf("Please enter your targeted glycemia:\n");
                 scanf("%s", &targeted_glycemia);
@@ -110,47 +113,60 @@ int main(int argc, char **argv)
             //WE NEED TO GET THE USER_ID GLOBAL ONCE USER IS CONNECTED.
             createTableGlycemia(db,sql,zErrMsg, rc);
             Entry * glycemia = getGlycemiaDataFromDB(user_id);
-            Entry *n ; 
-;
+            Entry *n ;
 
             if (glycemia == NULL){
                 emptyLogs = 1;
             }
 
-            printf("----------MENU-----------:\n");
+            printf("\n----------MENU-----------:\n");
             printf("1. Add a glycemia log\n");
             printf("2. See ALL your glycemia logs\n");
             printf("3. Sort by date your glycemia logs\n");
+            printf("4. What is my average glycemia (HBA1C)\n"); //make it HBA1C if we can do before
             printf("7. Settings\n");
             printf("8. Log out\n");
             printf("9. Exit\n");
             scanf(" %c", &choice);
 
             if (choice == '1')
-            {
+            {       
+                double glycemiaValue = inputsGlycemia();
+                char *commentValue = inputComment();
+
+                if (!glycemiaValue){
+                    printf("ERROR");
+                }
                //if pas de glycémia dans la bdd, createEntry first 
                if (emptyLogs == 1)
                {
-                glycemia = createEntry(inputsGlycemia(), "comment", NULL, 1, user_id);
+                glycemia = createEntry(glycemiaValue,commentValue, NULL, 1, user_id);
                 n = malloc(sizeof(Entry)); 
                 n = glycemia; //besoin de malloc ou pas?
-               } 
+                } 
                 else 
                {
-                n = addEntry(glycemia, inputsGlycemia(), "Newcomment", NULL, 0, user_id);
+                n = addEntry(glycemia, glycemiaValue,  commentValue, NULL, 0, user_id);
                }
 
                //si tout va bien on envoie à la bdd la dernière glycémie
                sendEntryToDatabase(n);
-            }else if (choice == '2'){
-                //show glycemia logs
+            }
+            else if (choice == '2')
+            {
+                //SHOW GLYCEMIA LOGS OF THE USER
                 showEntries(glycemia);
-                
-            }else if(choice == '3')
+            }    
+            else if(choice == '4')
+            {   //AVERAGE GLYCEMIA FROM USERS
+                double average;
+                average = averageGlycemia(glycemia);
+            }
+            else if(choice == '3')
             {
                 connected = 4;
-
-            }else if(choice == '7')
+            }
+            else if(choice == '7')
             {
                 connected = 3;   
 
@@ -162,13 +178,14 @@ int main(int argc, char **argv)
 
             }else if(choice == '9')
             {   
-                 //Freeing everything before exiting
+                //Freeing everything before exiting
                 while(glycemia){
-                  Entry * tmp = glycemia->next;
-                  free(glycemia->comment);
-                  free(glycemia);
-                  glycemia = tmp;
-               }
+                    Entry * tmp = glycemia->next;
+                    free(glycemia->comment);
+                    free(glycemia->taken_at);
+                    free(glycemia);
+                    glycemia = tmp;
+                }
                 printf("Goodbye!\n");
                 sqlite3_close(db);
                 exit(0);
@@ -176,6 +193,7 @@ int main(int argc, char **argv)
              while(glycemia){
                   Entry * tmp = glycemia->next;
                   free(glycemia->comment);
+                  free(glycemia->taken_at);
                   free(glycemia);
                   glycemia = tmp;
                 }

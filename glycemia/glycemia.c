@@ -4,7 +4,10 @@
 #include <string.h>
 #include "../sqlite3.h"
 #include "../users/users.h"
+#include "../functions/functions.h"
 #include "glycemia.h"
+#include "../entries/entry.h"
+
 
 //text variables to be put in an env file later
 char defaultUnit[] = "Default glycemia unit is g/L.\n";
@@ -24,6 +27,7 @@ double inputsGlycemia(){
         printf("%s", askForGlycemia);
         scanf("%s", &tempGlycemia);
         strcat(tempGlycemia, "\0");
+        getchar(); //Otherwise there's a \n in the buffer.
 
         //Verification and convert input to double
         if (!checkGlycemia(tempGlycemia)){
@@ -37,6 +41,50 @@ double inputsGlycemia(){
 
    alertGlycemiaOutOfRange(glycemia,unit);
     return glycemia;
+}
+
+char * inputComment(){
+    int maxChars = 255;
+    char askForComment[] = "Any comments ? Leave empty if none.\n";
+    printf("%s", askForComment);
+
+    char *input = malloc(maxChars);
+
+    char *gettingInput = fgets(input, maxChars, stdin);
+
+    if (gettingInput == NULL){
+        printf("\nCouldn't get input correctly.\n");
+    }
+
+    //When there's \n at the end of string we remove it.
+    char *lastchar = strrchr(input,'\n');
+    if (lastchar){
+        *lastchar = '\0';
+    }
+
+    int size = strlen(input) == 0 ? 1 : strlen(input);
+    input = realloc(input,size);
+    input[size] = '\0';
+
+    return input;
+  
+}
+
+double averageGlycemia(Entry *n){
+   double sum = 0;
+   int count = 0;
+   double average;
+
+   while(n){
+      sum += n->value ;
+      count++;
+      n = n->next;
+   }
+   average = sum/count;
+
+   printf("Your average glycemia is %.2lf g/L for a total of %d glycemia logs.\n", average, count);
+
+   return (average < 0) ? -1 : average;
 }
 
 void alertGlycemiaOutOfRange(double glycemia, int unit){
@@ -63,4 +111,4 @@ void alertGlycemiaOutOfRange(double glycemia, int unit){
    }
 }
 
-char * inputComment(){}
+
