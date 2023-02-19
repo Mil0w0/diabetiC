@@ -1,5 +1,5 @@
 //Compilation on linux : gcc main.c sqlite3.c -o main.exe -lpthread -ldl -lm
-//To compile : gcc main.c sqlite3.c database/database.c entries/entry.c glycemia/glycemia.c users/users.c functions/prettify.c -o main.exe
+//To compile : gcc main.c sqlite3.c database/database.c entries/entry.c glycemia/glycemia.c users/users.c functions/prettify.c config/config.c -o main.exe
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -53,6 +53,7 @@ int main(int argc, char **argv)
 
     free(config->username);
     free(config->password);
+    free(config->unit);
     free(config);
 
     loginUser(db, zErrMsg, rc, username, password, &connected, &user_id);
@@ -150,7 +151,7 @@ int main(int argc, char **argv)
 
             if (choice == '1')
             {       
-                double glycemiaValue = inputsGlycemia();
+                double glycemiaValue = inputsGlycemia(unit);
                 char *commentValue = inputComment();
                 cls();
 

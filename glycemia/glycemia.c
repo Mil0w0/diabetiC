@@ -9,14 +9,12 @@
 #include "../entries/entry.h"
 
 
-//text variables to be put in an env file later
 char defaultUnit[] = "Default glycemia unit is g/L.\n";
 char askForGlycemia[] = "Enter current glycemia : ";
 
 //get glycemia from user
-double inputsGlycemia(){
+double inputsGlycemia(char *unit){
    char *eptr;
-   int unit = 1; // 1 = g/L
    double glycemia = -1.0;
    double irrealMax = 30; //but can be different if unit is different.
 
@@ -87,15 +85,15 @@ double averageGlycemia(Entry *n){
    return (average < 0) ? -1 : average;
 }
 
-void alertGlycemiaOutOfRange(double glycemia, int unit){
-   char *hyperAlert = "You are in hyperglycemia ! You might want to put more insulin but be careful.\n";
-   char *hypoAlert = "You are in hypoglycemia ! Eat some fast carbs like 3 sugars (15g of carbs)\n";
-   char *severeHypoAlert = "You are in severe hypoglycemia. It can be life-threatening. Get help.\n";
+void alertGlycemiaOutOfRange(double glycemia, char *unit){
+   char hyperAlert[] = "You are in hyperglycemia ! You might want to put more insulin but be careful.\n";
+   char hypoAlert[] = "You are in hypoglycemia ! Eat some fast carbs like 3 sugars (15g of carbs)\n";
+   char severeHypoAlert[] = "You are in severe hypoglycemia. It can be life-threatening. Get help.\n";
 
-   //IF UNIT == 1 THEN UNIT IS g/L and
-   double max = (unit == 1) ? 1.80 : 180;
-   double low = (unit == 1) ? 0.70 : 70;
-   double min = (unit == 1) ? 0.50 : 50;
+   //UNIT == 0 : g/L | UNIT == 1 : g/L | UNIT == 2 : mmol/L
+   double max = (unit == '0') ? 1.80 : ( (unit == '2') ? 9.99 : 180) ;
+   double low = (unit == '0') ? 0.70 : ( (unit == '2') ? 3.89 : 70 ) ;
+   double min = (unit == '0') ? 0.50 : ( (unit == '2') ? 2.78 : 50 ) ;
 
    if (glycemia >= max)
    {

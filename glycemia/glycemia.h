@@ -1,8 +1,8 @@
 #include "../entries/entry.h"
 
-double inputsGlycemia();
+double inputsGlycemia(char *unit);
 
-void alertGlycemiaOutOfRange(double glycemia, int unit);
+void alertGlycemiaOutOfRange(double glycemia, char *unit);
 
 char * inputComment();
 
