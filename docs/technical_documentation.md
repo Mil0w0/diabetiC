@@ -104,13 +104,34 @@ Nous avons décidé d'utiliser SQLite principalement car notre application n'a p
 * utilisation d'une requête - interraction entre le C et la BDD.
 SQLite est développé en C, language également utilisé pour notre application, ce qui facilite son utilisation. La librairie sqlite utilisée n'est pas intégrée par défaut alors il faut l'intégrer à notre projet mais cela reste une manipulation peu complexe. c.f docs/how_to_use_sqlite3_C_interface.
 
-* pourquoi le callback
+* Pour chaque requête SQL on peut passer par une méthode rapide avec le sqlexec() ou une méthode plus personnalisé avec un prepare. Cette deuxième méthode nous permet d'utiliser des paramètres, faisant le lien entre SQL et le code.
 
 
 ## Mode d’utilisation :
-I.         Utilisateurs
+I. UTILISATEURS
 
-## Synthèse des membres de l’équipe
-● Loriane :
+    ● Création d'un compte
+        
+    ● Connexion à son compte
+
+    ● Modification des paramètres du compte
+
+    ● Utiliser le journal des glycémies
+        * Ajouter des glycémies
+        * Lire ses dernières glycémies et les trier
+        * Connaitre la moyenne de ses glycémies
+        * TO DO : HYPO / HYPER 
+
+
+II. EN MODE DEBUG
+
+    Un utilisateur par défaut est créé au démarrage de l'appli. Il s'agit de l'administrateur.
+    Login : admin
+    Password: Respons11
+    Avec cet utilisateur, il est possible d'afficher les données de toute la table USERS et GLYCEMIA. 
+    On peut imaginer qu'il est possible de supprimer un autre utilisateur depuis ce menu également.
+
+## Synthèse des membres de l’équipe & répartition des tâches
+● Loriane : Travaux sur les listes chaînées avec les glycémies, envoi des données liées à la glycémie à la bdd avec des paramètres, rédaction documentations, git owner.
 ● Marjorie :
 ● Nino :
