@@ -37,7 +37,7 @@ Entry *createEntry(double value, char *comment, char *date, int position, int us
     }
 
    //free(date);
-   //free(comment);
+   free(comment);
    
    return glycemia;
 }
@@ -154,11 +154,22 @@ Entry *getGlycemiaDataFromDB(int user_id){
       emptyLogs = 1;
    }
    else
-   {      
-      //create the glycemia log struct
-      firstGlycemia = createEntry(sqlite3_column_double(res, 1),
-                  sqlite3_column_text(res, 3),
-                  sqlite3_column_text(res, 2),
+   {
+       //changing type of the strings
+       int len = strlen(sqlite3_column_text(res, 3));
+       char *commentSent = malloc(len+1);
+       commentSent = strncpy(commentSent, sqlite3_column_text(res, 3), len);
+       commentSent[len] = '\0';
+
+       len = strlen(sqlite3_column_text(res, 2));
+       char *dateSent = malloc(len+1);
+       dateSent = strncpy(dateSent, sqlite3_column_text(res, 2), len);
+       dateSent[len] = '\0';
+
+       //create the first node of glycemia log struct
+       firstGlycemia = createEntry(sqlite3_column_double(res, 1),
+                  commentSent,
+                  dateSent,
                   sqlite3_column_int(res, 0),
                   user_id
                   );
@@ -166,11 +177,21 @@ Entry *getGlycemiaDataFromDB(int user_id){
 
    while (rc = sqlite3_step(res) == SQLITE_ROW) 
    {
+       int len = strlen(sqlite3_column_text(res, 3));
+       char *commentSent = malloc(len+1);
+       commentSent = strncpy(commentSent, sqlite3_column_text(res, 3), len);
+       commentSent[len] = '\0';
+
+       len = strlen(sqlite3_column_text(res, 2));
+       char *dateSent = malloc(len+1);
+       dateSent = strncpy(dateSent, sqlite3_column_text(res, 2), len);
+       dateSent[len] = '\0';
+
       //add the glycemia log node to the chained list
       addEntry(firstGlycemia,
                sqlite3_column_double(res, 1),
-               sqlite3_column_text(res, 3),
-               sqlite3_column_text(res, 2),
+               commentSent,
+               dateSent,
                0,
                user_id
                );
