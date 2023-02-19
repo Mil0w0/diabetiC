@@ -1,0 +1,7 @@
+#This is a config file for some tests
+#And it gonna be awful
+
+username = Milo
+password = Azerty11
+
+#End of it coz it's the end
