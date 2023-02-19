@@ -1,4 +1,6 @@
-#This is a config file for some tests
-#And it gonna be awful
--username=Milo
+# This is the config file of the app diabetiC
+# If you already have an account you can log here to always have your account logged in when you launch diabetiC
+-username=Nino
 -password=Azerty11
+# The basic unit g/L when unit = 0 / The other units are mg/dL when unit = 1 and mmol/L when unit = 2
+-unit=2
