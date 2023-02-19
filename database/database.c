@@ -4,7 +4,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
-#include "sqlite3.h"
+#include "../sqlite3.h"
 #include "database.h"
 
 
@@ -21,7 +21,7 @@ int callback(void *NotUsed, int argc, char **argv, char **azColName)
 
 void createDatabase(sqlite3 *db, char *sql, char *zErrMsg, int rc)
 {
-   rc = sqlite3_open("diabetic.db", &db);
+   rc = sqlite3_open("database/diabetic.db", &db);
 
    if( rc )
    {
@@ -42,6 +42,8 @@ void createTableUsers(sqlite3 *db, char *sql, char *zErrMsg, int rc)
             "AGE               INTEGER     NOT NULL," \
             "PASSWORD          VARCHAR(30)," \
             "TARGETED_GLYCEMIA FLOAT     NOT NULL," \
+            "HYPERGLYCEMIA     INTEGER     NOT NULL," \
+            "HYPOGLYCEMIA      INTEGER     NOT NULL," \
             "CREATED_AT        DATETIME);";
 
    /* Execute SQL statement */
@@ -87,9 +89,22 @@ void createTableGlycemia(sqlite3 *db, char *sql, char *zErrMsg, int rc){
       sqlite3_free(zErrMsg);
    } else
    {
-      fprintf(stdout, "Table GLYCEMIA created successfully\n");
+      //fprintf(stdout, "Table GLYCEMIA created successfully\n");
    }
-   sqlite3_close(db);
+}
+
+
+void printTableGlycemia(sqlite3 *db, char *sql, char *zErrMsg, int rc)
+{
+   sql = "SELECT * FROM GLYCEMIA";
+
+   rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg);
+
+   if( rc != SQLITE_OK )
+   {
+      fprintf(stderr, "SQL error: %s\n", zErrMsg);
+      sqlite3_free(zErrMsg);
+   }
 }
 
 int createFullDatabase(){
@@ -149,8 +164,6 @@ int createFullDatabase(){
       sqlite3_free(zErrMsg);
    } else
    {
-      fprintf(stdout, "Table GLYCEMIA created successfully\n");
+      //fprintf(stdout, "Table GLYCEMIA created successfully\n");
    }
-   sqlite3_close(db);
-
 }

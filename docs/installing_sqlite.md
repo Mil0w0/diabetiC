@@ -1,6 +1,6 @@
-### WINDOWS ###
-
 # HOW TO INSTALL SQL LITE
+
+### WINDOWS ###
 
 https://www.tutorialspoint.com/sqlite/sqlite_installation.htm
  * Download :   sqlite-dll-win64-x64-3400000.zip 
@@ -10,6 +10,13 @@ https://www.tutorialspoint.com/sqlite/sqlite_installation.htm
  * Unzip those files in C:\sqlite
  * Add this path in the $PATH environnment variable (Paramètres>Système>A propos> Paramètres avancés> Environnement de variables> PATH> Nouveau>OK)
  * open a shell and run "sqlite3" (-> should display version of sqlite)
+
+
+### LINUX ###
+
+By default it should be on your OS.
+Else, follow the installations from windows.
+
 
 # Useful commands in sqlite: 
 sqlite >.databases  --display databases
@@ -24,11 +31,5 @@ https://www.sqlite.org/howtocompile.html
    * Add the header in your program : #include "sqlite3.h".
    * Run gcc main.c sqlite3.c -o main.exe where main.c is your program to compile.
    * It should be all good :)
-
-########
-
-
-### LINUX ###
-
 
 ########

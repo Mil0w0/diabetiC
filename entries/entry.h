@@ -1,3 +1,7 @@
+
+#pragma once
+#include <stdbool.h>
+
 typedef struct Entry Entry;
 struct Entry {
     Entry *next;
@@ -9,6 +13,17 @@ struct Entry {
 };
 
 Entry *createEntry(double value, char *comment, char *date, int position, int user_id);
-void addEntry(Entry *firstEntry, double i, char *comment, char *date, int position, int user_id);
+
+Entry *addEntry(Entry *firstEntry, double value, char *comment, char *date, int position, int user_id);
+
 int sendEntryToDatabase(Entry *glycemia);
-int getGlycemiaDataFromDB(unsigned int user_id);
+
+Entry *getGlycemiaDataFromDB(int user_id);
+
+void showEntries(Entry *firstEntry);
+
+void showEntriesForDate(Entry *glycemia, char *date);
+
+void showEntriesBeforeAfterDate(char *date, int user_id, sqlite3 *db, char *zErrMsg, int rc, bool before);
+
+void showEntriesBetweenDates(char *date, char *date2, int user_id, sqlite3 *db, char *zErrMsg, int rc);
