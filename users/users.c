@@ -502,18 +502,22 @@ void showHypoHyper(sqlite3 *db, int user_id)
 }
 
 void updatePassword(int *user_id) {
+    bool check = false;
     char * newPassword = malloc(sizeof(char*));
     char * repeatPassword = malloc(sizeof(char*));
     printf("Enter your new password : ");
     scanf("%s",newPassword);
+    cls();
     printf("\nEnter your new password again :\n");
     scanf("%s",repeatPassword);
+    cls();
     if (strcmp(newPassword,repeatPassword)!=0) {
         printf("Password do not match.");
-    } else if (!checkPassword(newPassword)) {
+    } check = checkPassword(newPassword);
+    if (check==false) {
         printf("Password must contain at least 8 characters, 1 number and 1 uppercase");
     } else {
-        // Req entière : char sqlPwd[] = "UPDATE USER SET User.password = password WHERE User.username = username";
+        // Req entière : char sqlPwd[] = "UPDATE USER SET User.password = password WHERE User.user_id = user_id";
         char sqlPwd[] = "UPDATE USER SET User.password = ";
         strcat(sqlPwd,newPassword);
         strcat(sqlPwd," WHERE User.user_id = ");
