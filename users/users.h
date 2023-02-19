@@ -17,7 +17,7 @@ void createAdminUser(sqlite3 *db, char *sql, char *zErrMsg, int rc);
 
 int getUserID(sqlite3 *db, char *zErrMsg, int rc, char *username, char *password);
 
-void loginUser(sqlite3 *db, char *zErrMsg, int rc, char *username, char *password, int *connected, int *user_id);
+void loginUser(sqlite3 *db, char *zErrMsg, int rc, char *username, char *password, int *connected, int *user_id, bool isConfig);
 
 void createUser(sqlite3 *db, char *zErrMsg, int rc, char *username, char *password, char *age, char *targeted_glycemia, int connected);
 
@@ -38,3 +38,9 @@ bool checkAge(char *age);
 void cryptPassword(char *password);
 
 void decryptPassword(char *password);
+
+void addHyperToUser(sqlite3 *db, int user_id);
+
+void addHypoToUser(sqlite3 *db, int user_id);
+
+void showHypoHyper(sqlite3 *db, int user_id);

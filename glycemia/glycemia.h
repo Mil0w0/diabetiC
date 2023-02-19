@@ -1,8 +1,8 @@
 #include "../entries/entry.h"
 
-double inputsGlycemia(char unit[]);
+double inputsGlycemia(char unit[], int user_id, sqlite3 *db);
 
-void alertGlycemiaOutOfRange(double glycemia, int unit);
+void alertGlycemiaOutOfRange(double glycemia, int unit, int user_id, sqlite3 *db);
 
 char * inputComment();
 

@@ -25,7 +25,7 @@ int whichUnit(char unit[])
 }
 
 //get glycemia from user
-double inputsGlycemia(char unit[]){
+double inputsGlycemia(char unit[], int user_id, sqlite3 *db){
    char *eptr;
    char *defaultUnit = malloc(35);
    double glycemia = -1.0;
@@ -73,7 +73,7 @@ double inputsGlycemia(char unit[]){
 
     } while (glycemia <= 0 || glycemia > irrealMax);
 
-    alertGlycemiaOutOfRange(glycemia, theUnit);
+   alertGlycemiaOutOfRange(glycemia,theUnit, user_id, db);
     return glycemia;
 }
 
@@ -121,7 +121,7 @@ double averageGlycemia(Entry *n){
    return (average < 0) ? -1 : average;
 }
 
-void alertGlycemiaOutOfRange(double glycemia, int unit){
+void alertGlycemiaOutOfRange(double glycemia, int unit, int user_id, sqlite3 *db){
    char hyperAlert[] = "You are in hyperglycemia ! You might want to put more insulin but be careful.\n";
    char hypoAlert[] = "You are in hypoglycemia ! Eat some fast carbs like 3 sugars (15g of carbs)\n";
    char severeHypoAlert[] = "You are in severe hypoglycemia. It can be life-threatening. Get help.\n";
@@ -134,14 +134,17 @@ void alertGlycemiaOutOfRange(double glycemia, int unit){
    if (glycemia >= max)
    {
       printf("%s", hyperAlert);
+      addHyperToUser(db, user_id);
    }
    else if (glycemia <= min)
    {
       printf("%s", severeHypoAlert);
+      addHypoToUser(db, user_id);
    }
    else if (glycemia <= low)
    {
       printf("%s", hypoAlert);
+      addHypoToUser(db, user_id);
    }
 }
 

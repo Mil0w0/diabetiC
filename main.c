@@ -45,6 +45,15 @@ int main(int argc, char **argv)
         printf("\n");
     }
 
+    // Create the table users
+    createTableUsers(db, sql, zErrMsg, rc);
+
+    // Create the admin user
+    createAdminUser(db, sql, zErrMsg, rc);
+
+    cls();
+    welcomeTodiabetiC();
+
     Config *config = readFile("config/config.txt");
 
     strcpy(username, config->username);
@@ -56,16 +65,8 @@ int main(int argc, char **argv)
     free(config->unit);
     free(config);
 
-    loginUser(db, zErrMsg, rc, username, password, &connected, &user_id);
+    loginUser(db, zErrMsg, rc, username, password, &connected, &user_id, true);
 
-    // Create the table users
-    createTableUsers(db, sql, zErrMsg, rc);
-
-    // Create the admin user
-    createAdminUser(db, sql, zErrMsg, rc);
-
-    cls();
-    welcomeTodiabetiC();
     do 
     {
         // Case 1: User is not connected
@@ -91,7 +92,7 @@ int main(int argc, char **argv)
                 strcat(password, "\0");
 
                 // Check if the user exists and if the password is correct then connect the user
-                loginUser(db, zErrMsg, rc, username, password, &connected, &user_id);
+                loginUser(db, zErrMsg, rc, username, password, &connected, &user_id, false);
 
             }else if(choice == '2')
             {
@@ -144,6 +145,7 @@ int main(int argc, char **argv)
             printf("2. See ALL your glycemia logs\n");
             printf("3. Sort by date your glycemia logs\n");
             printf("4. What is my average glycemia (HBA1C)\n"); //make it HBA1C if we can do before
+            printf("5. See all my hyperglycemia and hypoglycemia\n");
             printf("7. Settings\n");
             printf("8. Log out\n");
             printf("9. Exit\n");
@@ -151,7 +153,7 @@ int main(int argc, char **argv)
 
             if (choice == '1')
             {       
-                double glycemiaValue = inputsGlycemia(unit);
+                double glycemiaValue = inputsGlycemia(unit, user_id, db);
                 char *commentValue = inputComment();
                 cls();
 
@@ -182,6 +184,11 @@ int main(int argc, char **argv)
             {   //AVERAGE GLYCEMIA FROM USERS
                 double average;
                 average = averageGlycemia(glycemia);
+            }
+            else if(choice == '5')
+            {
+                cls();
+                showHypoHyper(db, user_id);
             }
             else if(choice == '3')
             {
