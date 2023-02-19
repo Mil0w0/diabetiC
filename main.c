@@ -12,6 +12,7 @@
 #include "entries/entry.h"
 #include "glycemia/glycemia.h"
 #include "functions/functions.h"
+#include "config/config.h"
 
 int main(int argc, char **argv)
 {
@@ -29,6 +30,8 @@ int main(int argc, char **argv)
     char targeted_glycemia[10];
     int user_id = 0;
     int emptyLogs = 0;
+
+    readFile("config.txt");
 
     //CREATE DATABASE;
     rc = sqlite3_open("database/diabetic.db", &db);
@@ -94,12 +97,12 @@ int main(int argc, char **argv)
                 scanf("%s", &password);
                 printf("\n");
                 strcat(password, "\0");
-               cls();
 
                 printf("Please enter your targeted glycemia:\n");
                 scanf("%s", &targeted_glycemia);
                 printf("\n");
                 strcat(targeted_glycemia, "\0");
+                cls();
 
                 // Create a new user
                 createUser(db, zErrMsg, rc, username, password, age, targeted_glycemia, connected);
