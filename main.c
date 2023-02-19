@@ -15,7 +15,6 @@
 
 int main(int argc, char **argv)
 {
-    cls();
     sqlite3 *db;
     char *zErrMsg = 0;
     int rc;
@@ -49,14 +48,17 @@ int main(int argc, char **argv)
     // Create the admin user
     createAdminUser(db, sql, zErrMsg, rc);
 
+    cls();
+    welcomeTodiabetiC();
     do 
     {
         // Case 1: User is not connected
         if(connected == 0)
-        {   cls();
+        {
             printf("Welcome to your glycemia database, please choose an option:\n");
             printf("1. Log in with your user\n");
             printf("2. Create a new user\n");
+            printf("3. About us\n");
             printf("9. Exit\n");
             scanf(" %c", &choice);
 
@@ -101,7 +103,9 @@ int main(int argc, char **argv)
 
                 // Create a new user
                 createUser(db, zErrMsg, rc, username, password, age, targeted_glycemia, connected);
-
+            }else if(choice == '3')
+            {   cls();
+                printTutorial();
             }else if(choice == '9')
             {
                 printf("Goodbye!\n");
@@ -322,6 +326,7 @@ int main(int argc, char **argv)
             }
 
         }
+        cls();
     }while(choice != '9');
 
     return 0;
