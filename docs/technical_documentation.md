@@ -63,6 +63,10 @@ II. Fonctionnalités avancées
     d. Unités de la glycémie.
 
     e. Affichage des glycémies
+    Il a y plusieurs mode d'affichage des glycémies, pour la base il y a celle qui affiche toutes les glycémies de l'user mais il y d'autre possibilités:
+	* Before, qui affiche toutes les glycémies avant une date donnée
+	* After, qui affiche toutes les glycémies après une date donnée
+	* Between, qui affiche toutes les glycémies entre deux dates données
 
     f. Enregister un user
 
@@ -93,6 +97,10 @@ II. Fonctionnalités avancées
 
     Les actions que l'on fait sur cette table sont assez basiques allants de l'INSERT INTO () VALUES () au SELECT WHERE assez basique mais nécessaire pour le fonctionnement du menu de base
 
+     g. Admin et Debug
+     Pour la gestion niveau admin, l'app crée au premier lancement de l'application un user dans la bdd avec des identifiants admin qui va permettre d'utiliser d'autres fonctionnalités
+     Lors de la connexion avec l'admin un nouveau menu est proposé qui permet d'afficher le contenu des bdds
+
 
 III. Utilisation de la base de données
 
@@ -120,7 +128,15 @@ I. UTILISATEURS
         * Ajouter des glycémies
         * Lire ses dernières glycémies et les trier
         * Connaitre la moyenne de ses glycémies
-        * TO DO : HYPO / HYPER 
+        * TO DO : HYPO / HYPER
+    
+    ● Utilisation du config.txt
+	* Possibilités d'entre ses identifiants pour une connexion automatique à l'appli
+	* Modification de l'unité de la glycémie
+    
+    ● Settings
+	* Modifier la glycémie cible
+	* Supprimer son compte
 
 
 II. EN MODE DEBUG
@@ -154,3 +170,13 @@ II. EN MODE DEBUG
 ● Marjorie :
 
 ● Nino :
+
+	* Travaux sur la gestion de user, de la création à la modification, l'envoie en bdd...
+	* Création d'un fichier de config, et récupération des données dans l'app
+	* Fix de bugs, et combats avec l'app pour faire marcher certaines fonctionnalités
+	* Création des menus et du squelette de l'application
+
+	Le sujet nous as permis de revoir pas mal de notion de C et d'en apprendre des nouvelles, la librairie sqlite3 étant assez simple d'utilisation
+	nous avons pu faire la majorité des fonctionnalités voulu.
+
+	Je dédicace mon travail à Pom Pom, le lapin, qui à vécu de sales histoires.
