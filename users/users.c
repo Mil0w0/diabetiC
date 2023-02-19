@@ -153,7 +153,7 @@ void loginUser(sqlite3 *db, char *zErrMsg, int rc, char *username, char *passwor
         
         *id = getUserID(db, zErrMsg, rc, username, password);
         printf("You are now connected !\n");
-        printf("Welcome %s ^^\n\n", username);
+        printf("Welcome %s !\n\n", username);
         *connected = 1;
         }
     }

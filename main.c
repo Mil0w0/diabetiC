@@ -276,14 +276,14 @@ int main(int argc, char **argv)
                 printf("\nPlease enter the date you want to see the logs before (dd/mm/yyyy):\n");
                 scanf("%s", &date);
                 //show glycemia logs before a specific date
-                showEntriesBeforeAfterDate(glycemia, date, user_id, db, zErrMsg, rc, true);
+                showEntriesBeforeAfterDate(date, user_id, db, zErrMsg, rc, true);
 
             }else if(choice == '3')
             {
                 printf("\nPlease enter the date you want to see the logs after (dd/mm/yyyy):\n");
                 scanf("%s", &date);
                 //show glycemia logs after a specific date
-                showEntriesBeforeAfterDate(glycemia, date, user_id, db, zErrMsg, rc, false);
+                showEntriesBeforeAfterDate(date, user_id, db, zErrMsg, rc, false);
 
             }else if (choice == '4')
             {
@@ -292,7 +292,7 @@ int main(int argc, char **argv)
                 printf("\nPlease enter the second date you want to see the logs between (dd/mm/yyyy):\n");
                 scanf("%s", &date2);
                 //show glycemia logs between two dates
-                showEntriesBetweenDates(glycemia, date, date2, user_id, db, zErrMsg, rc);
+                showEntriesBetweenDates(date, date2, user_id, db, zErrMsg, rc);
 
             }else if (choice == '0')
             {
