@@ -501,7 +501,7 @@ void showHypoHyper(sqlite3 *db, int user_id)
 
 }
 
-void updatePassword(int *user_id) {
+void updatePassword(sqlite3 *db,int *user_id) {
     bool check = false;
     bool condition = false;
     char * newPassword = malloc(sizeof(char*)*255);
@@ -533,7 +533,31 @@ void updatePassword(int *user_id) {
         strcat(sqlPwd," WHERE User.user_id = ");
         strcat(sqlPwd,user_id);
         strcat(sqlPwd,";");
-        updateTable(sqlPwd);
+    updateTable(db,sqlPwd);
 
     free(newPassword);
+}
+
+void updateTable(sqlite3 *db,char *sql) {
+    
+    char *zErrMsg = 0;
+    int rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg);
+
+    if (rc) {
+        fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
+        return(0);
+        } else {
+            fprintf(stderr, "Opened database successfully\n");
+    }
+
+    /* Execute SQL statement */
+    rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg);
+
+    if (rc!= SQLITE_OK ){
+        fprintf(stderr, "SQL error: %s\n", zErrMsg);
+        sqlite3_free(zErrMsg);
+    } else {
+        fprintf(stdout, "Table updated successfully\n");
+    }
+    sqlite3_close(db);
 }

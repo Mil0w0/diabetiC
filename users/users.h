@@ -45,4 +45,6 @@ void addHypoToUser(sqlite3 *db, int user_id);
 
 void showHypoHyper(sqlite3 *db, int user_id);
 
-void updatePassword(int *user_id);
+void updatePassword(sqlite3 *db,int *user_id);
+
+void updateTable(sqlite3 *db,char *sql);

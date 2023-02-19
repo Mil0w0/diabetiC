@@ -194,7 +194,7 @@ int main(int argc, char **argv)
             }else if (choice == '6')
             {
                 //UPDATE USER'S PASSWORD
-                updatePassword(user_id);
+                updatePassword(db,user_id);
             }
             else if(choice == '3')
             {
