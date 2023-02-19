@@ -203,8 +203,7 @@ void createUser(sqlite3 *db, char *zErrMsg, int rc, char *username, char *passwo
         }else
         {
         fprintf(stdout, "User created successfully\n");
-        printf("You are now connected !\n");
-        printf("Welcome %s !\n\n", username);
+        printf("You can now log yourself with your account !\n");
         connected = 1;
         }
     }
