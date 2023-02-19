@@ -22,6 +22,7 @@ int main(int argc, char **argv)
     char *sql;
     char choice;
     int connected = 0;
+    char unit[2];
     char username[30];
     char password[30];
     char *usernameConfig;
@@ -50,6 +51,7 @@ int main(int argc, char **argv)
 
     strcpy(username, config->username);
     strcpy(password, config->password);
+    strcpy(unit, config->unit);
 
     free(config->username);
     free(config->password);
