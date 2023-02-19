@@ -36,7 +36,7 @@ Entry *createEntry(double value, char *comment, char *date, int position, int us
         glycemia->taken_at[charsInDate] ='\0';
     }
 
-   //free(date);
+   free(date);
    free(comment);
    
    return glycemia;
@@ -45,7 +45,6 @@ Entry *createEntry(double value, char *comment, char *date, int position, int us
 //Add an entry to the diary : a chained list of nodes
 Entry *addEntry(Entry *lastEntry, double i, char *comment, char *date, int position, int user_id){
     //if user add a new entry, position is calculated from the last entry
-    //if we are recreating the list from the db data then position has already been calculated.
     if (position == 0){
          while(lastEntry->next){ //looking for the current last entry
             lastEntry = lastEntry->next;
@@ -54,7 +53,6 @@ Entry *addEntry(Entry *lastEntry, double i, char *comment, char *date, int posit
 
     }
     lastEntry->next = createEntry(i, comment, date, position, user_id);
-    //sendEntryToDatabase(lastEntry->next);
     return lastEntry->next ;
 }
 
@@ -99,7 +97,7 @@ int sendEntryToDatabase(Entry *glycemia){
 
    rc = sqlite3_step(res);
 
-   //Error hzndling
+   //Error handling
    if (rc != SQLITE_DONE) {
       printf("execution failed: %s", sqlite3_errmsg(db));
    }
