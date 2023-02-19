@@ -119,7 +119,6 @@ int getUserID(sqlite3 *db, char *zErrMsg, int rc, char *username, char *password
 
 void loginUser(sqlite3 *db, char *zErrMsg, int rc, char *username, char *password, int *connected, int *id)
 {
-
     char admin[30] = "admin";
     char adminPassword[30] = "Respons11";
 

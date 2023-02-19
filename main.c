@@ -38,9 +38,13 @@ int main(int argc, char **argv)
     strcpy(username, config->username);
     strcpy(password, config->password);
 
+    free(config->username);
+    free(config->password);
     free(config);
 
     loginUser(db, zErrMsg, rc, username, password, &connected, &user_id);
+
+    printf("User ID: %d", user_id);
 
     //CREATE DATABASE;
     rc = sqlite3_open("database/diabetic.db", &db);

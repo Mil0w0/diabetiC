@@ -7,13 +7,15 @@ Config *readFile(char *filename)
 {
 
     Config *config = malloc(sizeof(Config));
+    config->username = malloc(30);
+    config->password = malloc(30);
 
     config->username = "Empty";
     config->password = "Empty";
 
     char line[256];
-    char tempUser[30];
-    char tempPass[30];
+    // char tempUser[30];
+    // char tempPass[30];
     char *key;
     const char delim[2] = "=";
 
@@ -35,13 +37,17 @@ Config *readFile(char *filename)
             {
                 if(config->username == "Empty")
                 {
-                    strcpy(tempUser, key);
-                    config->username = tempUser;
+                    int size = strlen(key);
+                    config->username = malloc(size);
+                    memcpy(config->username, key, size-1);
+                    config->username[size] = '\0';
                 }
                 else if(config->password == "Empty")
                 {
-                    strcpy(tempPass, key);
-                    config->password = tempPass;
+                    int size = strlen(key);
+                    config->password = malloc(size+1);
+                    memcpy(config->password, key, size);
+                    config->password[size] = '\0';
                 }
             }
             key = strtok(NULL, delim);
