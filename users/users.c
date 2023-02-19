@@ -515,12 +515,14 @@ void updatePassword(int *user_id) {
     cls();
     if (strcmp(newPassword,repeatPassword)!=0) {
         printf("Password do not match.");
+        } else {
+            condition==true;
         }
         check = checkPassword(newPassword);
     if (check==false) {
         printf("Password must contain at least 8 characters, 1 number and 1 uppercase");
         }
-    } while (condition==false);
+    } while (condition==false || check==false);
     
     cryptPassword(newPassword);
         // Req entière : char sqlPwd[] = "UPDATE USER SET User.password = password WHERE User.user_id = user_id";
