@@ -1,12 +1,11 @@
 //Compilation on linux : gcc main.c sqlite3.c -o main.exe -lpthread -ldl -lm
 //To compile : gcc main.c sqlite3.c database/database.c entries/entry.c glycemia/glycemia.c users/users.c functions/prettify.c config/config.c -o main.exe
-
+// gcc *.c */*.c -o main.exe
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
 #include <string.h>
 #include "sqlite3.h"
-#include <time.h>
 #include "users/users.h"
 #include "database/database.h"
 #include "entries/entry.h"
@@ -231,7 +230,7 @@ int main(int argc, char **argv)
             printf("\n----------MENU ADMIN-----------:\n");
             printf("1. Print the table users (debug)\n");
             printf("2. See all  glycemia logs (debug)\n");
-            printf("8. Log out\n");
+            printf("3. Log out\n");
             printf("9. Exit\n");
             scanf(" %c", &choice);
 
@@ -247,7 +246,7 @@ int main(int argc, char **argv)
                 printf("\n");
                 printTableGlycemia(db, sql, zErrMsg, rc);
 
-            }else if(choice == '8')
+            }else if(choice == '3')
             {
                 cls();
                 printf("\nYou are now disconnected\n\n");
@@ -265,8 +264,7 @@ int main(int argc, char **argv)
         {
             printf("\n---------- Settings -----------:\n");
             printf("1. Update your target range glycemia\n");
-            printf("2. Change the language\n");
-            printf("8. Delete your account\n");
+            printf("2. Delete your account\n");
             printf("0. Exit Settings\n");
             scanf(" %c", &choice);
 
@@ -278,13 +276,6 @@ int main(int argc, char **argv)
                 updateTargetedGlycemia(db, zErrMsg, rc, username, targeted_glycemia);
 
             }else if(choice == '2')
-            {
-                printf("\nTO DO\n");
-                // printf("\nPlease enter your language:\n");
-                // scanf("%s", &language);
-                // // Update the targeted glycemia
-                // updateLanguage(db, zErrMsg, rc, username, language);
-            }else if(choice == '8')
             {
                 printf("\nAre you sure you want to delete your account? (y/n)\n");
                 scanf(" %c", &choice);
