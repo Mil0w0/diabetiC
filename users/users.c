@@ -504,8 +504,8 @@ void showHypoHyper(sqlite3 *db, int user_id)
 void updatePassword(int *user_id) {
     bool check = false;
     bool condition = false;
-    char * newPassword = malloc(sizeof(char*));
-    char * repeatPassword = malloc(sizeof(char*));
+    char * newPassword = malloc(sizeof(char*)*255);
+    char * repeatPassword = malloc(sizeof(char*)*255);
     do {   
     printf("Enter your new password : ");
     scanf("%s",newPassword);
@@ -524,6 +524,8 @@ void updatePassword(int *user_id) {
         }
     } while (condition==false || check==false);
     
+    free(repeatPassword);
+    
     cryptPassword(newPassword);
         // Req entière : char sqlPwd[] = "UPDATE USER SET User.password = password WHERE User.user_id = user_id";
         char sqlPwd[] = "UPDATE USER SET User.password = ";
@@ -534,5 +536,4 @@ void updatePassword(int *user_id) {
         updateTable(sqlPwd);
 
     free(newPassword);
-    free(repeatPassword);
 }
