@@ -514,13 +514,17 @@ void updatePassword(sqlite3 *db,int *user_id) {
     scanf("%s",repeatPassword);
     cls();
     if (strcmp(newPassword,repeatPassword)!=0) {
-        printf("Password do not match.");
+            printf("Password do not match. TEST STRING\n");
         } else {
             condition==true;
         }
         check = checkPassword(newPassword);
+        printf(check);
+        printf(condition);
     if (check==false) {
-        printf("Password must contain at least 8 characters, 1 number and 1 uppercase");
+            printf("Password must contain at least 8 characters, 1 number and 1 uppercase TST STRING\n");
+        } else {
+            check == true;
         }
     } while (condition==false || check==false);
     
