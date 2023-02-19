@@ -1,11 +1,13 @@
 #include "../entries/entry.h"
 
-double inputsGlycemia(char *unit);
+double inputsGlycemia(char unit[]);
 
-void alertGlycemiaOutOfRange(double glycemia, char *unit);
+void alertGlycemiaOutOfRange(double glycemia, int unit);
 
 char * inputComment();
 
 double averageGlycemia(Entry *n);
 
 char getDataFromDB(unsigned int user_id);
+
+int whichUnit(char unit[]);
