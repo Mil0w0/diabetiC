@@ -40,7 +40,7 @@ Config *readFile(char *filename)
                     int size = strlen(key);
                     config->username = malloc(size);
                     memcpy(config->username, key, size-1);
-                    config->username[size] = '\0';
+                    config->username[size-1] = '\0';
                 }
                 else if(config->password == "Empty")
                 {
