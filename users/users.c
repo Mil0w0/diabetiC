@@ -501,7 +501,7 @@ void showHypoHyper(sqlite3 *db, int user_id)
 
 }
 
-void updatePassword(sqlite3 *db,int user_id) {
+void updatePassword(sqlite3 *db,char * username) {
     bool check = false;
     int check1 = 0;
     int check2 = 0;
@@ -539,12 +539,10 @@ void updatePassword(sqlite3 *db,int user_id) {
         // Req entière : char sqlPwd[] = "UPDATE USER SET User.password = password WHERE User.user_id = user_id";
         char sqlPwd[] = "UPDATE USER SET User.password = ";
         strcat(sqlPwd,newPassword);
-    printf("APRES password");
-    strcat(sqlPwd," WHERE User.ID = ");
-        strcat(sqlPwd,user_id);
-    printf("\nAPRES USER.ID");
-        strcat(sqlPwd,";");
-    printf("Avant le updateTable");
+    strcat(sqlPwd," WHERE username = ");
+    strcat(sqlPwd,username);
+    //strcat(sqlPwd,";");
+    printf("--");
     updateTable(db,sqlPwd);
 
     free(newPassword);
