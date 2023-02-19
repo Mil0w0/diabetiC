@@ -537,7 +537,7 @@ void updatePassword(sqlite3 *db,char * username) {
     
     cryptPassword(newPassword);
         // Req entière : char sqlPwd[] = "UPDATE USER SET User.password = password WHERE User.user_id = user_id";
-        char sqlPwd[] = "UPDATE USER SET User.password = ";
+    char sqlPwd[] = "UPDATE USER SET password = ";
         strcat(sqlPwd,newPassword);
     strcat(sqlPwd," WHERE username = ");
     strcat(sqlPwd,username);
