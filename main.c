@@ -33,18 +33,18 @@ int main(int argc, char **argv)
     int user_id = 0;
     int emptyLogs = 0;
 
-    Config *config = readFile("config.txt");
+    // Config *config = readFile("config/config.txt");
 
-    strcpy(username, config->username);
-    strcpy(password, config->password);
+    // strcpy(username, config->username);
+    // strcpy(password, config->password);
 
-    free(config->username);
-    free(config->password);
-    free(config);
+    // free(config->username);
+    // free(config->password);
+    // free(config);
 
-    loginUser(db, zErrMsg, rc, username, password, &connected, &user_id);
+    // loginUser(db, zErrMsg, rc, username, password, &connected, &user_id);
 
-    printf("User ID: %d", user_id);
+    // printf("User ID: %d", user_id);
 
     //CREATE DATABASE;
     rc = sqlite3_open("database/diabetic.db", &db);
