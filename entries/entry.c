@@ -148,7 +148,6 @@ Entry *getGlycemiaDataFromDB(int user_id){
    // CREATE GLYCEMIA LOGS FROM DATABASE
 
    if (sqlite3_step(res) != SQLITE_ROW){
-      printf("%s\n",emptyLogsText);
       emptyLogs = 1;
    }
    else
