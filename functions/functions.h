@@ -2,6 +2,6 @@ void cls();
 
 void welcomeTodiabetiC();
 
-void printTutorial();
+int printTutorial();
 
-void readTutorial();
+int readTutorial();
