@@ -342,7 +342,7 @@ int main(int argc, char **argv)
             }
 
         }
-        cls();
+        // cls();
     }while(choice != '9');
 
     return 0;
