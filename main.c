@@ -146,6 +146,7 @@ int main(int argc, char **argv)
             printf("3. Sort by date your glycemia logs\n");
             printf("4. What is my average glycemia (HBA1C)\n"); //make it HBA1C if we can do before
             printf("5. See all my hyperglycemia and hypoglycemia\n");
+            printf("6. Change my password\n");
             printf("7. Settings\n");
             printf("8. Log out\n");
             printf("9. Exit\n");
@@ -189,6 +190,11 @@ int main(int argc, char **argv)
             {
                 cls();
                 showHypoHyper(db, user_id);
+
+            }else if (choice == '6')
+            {
+                //UPDATE USER'S PASSWORD
+                updatePassword(user_id);
             }
             else if(choice == '3')
             {
