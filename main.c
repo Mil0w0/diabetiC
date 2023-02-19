@@ -25,8 +25,6 @@ int main(int argc, char **argv)
     char unit[2];
     char username[30];
     char password[30];
-    char *usernameConfig;
-    char *passwordConfig;
     char date[11];
     char date2[11];
     char age[3];
