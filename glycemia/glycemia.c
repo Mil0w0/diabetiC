@@ -40,14 +40,14 @@ double inputsGlycemia(char unit[]){
         case 1:
             char text[] = "Default glycemia unit is mg/dL.\n";
             defaultUnit = realloc(defaultUnit, strlen(text));
-            defaultUnit = strncpy(defaultUnit,"Default glycemia unit is g/L.\n", strlen(text));
+            defaultUnit = strncpy(defaultUnit,"Default glycemia unit is mg/dL.\n", strlen(text));
             irrealMax = 3000;
             break;
         case 2:
             char text2[] = "Default glycemia unit is mmol/L.\n";
             "Default glycemia unit is mg/dL.\n";
             defaultUnit = realloc(defaultUnit, strlen(text2));
-            defaultUnit = strncpy(defaultUnit,"Default glycemia unit is g/L.\n", strlen(text2));
+            defaultUnit = strncpy(defaultUnit,"Default glycemia unit is mmol/L.\n", strlen(text2));
             irrealMax = 166;
         default:
             irrealMax = 30;
